@@ -27,6 +27,10 @@ function onOpen() {
     .addSeparator()
     .addItem('Help 🛟', 'showHelp')
     .addToUi();
+
+    reset();
+    Demo.pasteSamplePairingCsvData();
+    formatCsv();
 }
 
 function reset() {

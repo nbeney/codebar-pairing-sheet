@@ -103,7 +103,7 @@ class Format {
     const roleColIndex = data[0].indexOf('Role');
 
     if (roleColIndex === -1) return;
-    
+
     for (let i = 1; i < data.length; i++) {
       if (data[i][roleColIndex] === 'Coach') {
         data[i][roleColIndex] = ROLE_COACH;
@@ -230,7 +230,7 @@ class Format {
         const skillsTutorial = data[i][skillsTutorialColIndex].toString();
         const group = TUTORIAL_GROUP_MAP[skillsTutorial];
         if (group !== undefined) {
-          data[i][groupColIndex] = group;
+          data[i][groupColIndex] = group.name;
         }
       }
     }
@@ -238,27 +238,50 @@ class Format {
 
     // Validation part
 
-    const groups = Array.from(new Set(Object.values(TUTORIAL_GROUP_MAP))).sort();
+    const groups = GROUPS.map(g => g.name);
     const val = SpreadsheetApp.newDataValidation()
       .setAllowInvalid(true)
       .requireValueInList(groups, true)
       .build();
     sheet.getRange(2, groupColIndex + 1, sheet.getLastRow() - 1).setDataValidation(val);
+
+    // Conditional formatting part
+
+    const rules = sheet.getConditionalFormatRules();
+
+    for (const group of GROUPS) {
+      // For cols A to NUM_COLS
+      const rule = SpreadsheetApp.newConditionalFormatRule()
+        .whenFormulaSatisfied(`=$${String.fromCharCode(65 + groupColIndex)}2="${group.name}"`)
+        .setBackground(group.color)
+        .setFontColor('#000000')
+        .setRanges([sheet.getRange(2,1, sheet.getLastRow() - 1, NUM_COLS)])
+        .build();
+      rules.push(rule);
+
+      // For cols NUM_COLS+1 to 2*NUM_COLS
+      const rule2 = SpreadsheetApp.newConditionalFormatRule()
+        .whenFormulaSatisfied(`=$${String.fromCharCode(65 + groupColIndex + NUM_COLS)}2="${group.name}"`)
+        .setBackground(group.color)
+        .setFontColor('#000000')
+        .setRanges([sheet.getRange(2,NUM_COLS + 1, sheet.getLastRow() - 1, NUM_COLS)])
+        .build();
+      rules.push(rule2);
+    }
+    sheet.setConditionalFormatRules(rules);
   }
 
   static sortAttendees() {
     const sheet = SpreadsheetApp.getActiveSheet();
     const data = sheet.getDataRange().getValues();
-    const roleColIndex = data[0].indexOf('Role');
     const nameColIndex = data[0].indexOf('Name');
 
-    if (roleColIndex !== -1 && nameColIndex !== -1) {
-      const range = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn());
-      range.sort([
-        // { column: roleColIndex + 1, ascending: true },
-        { column: nameColIndex + 1, ascending: true }
-      ]);
-    }
+    if (nameColIndex === -1) return;
+
+    const range = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn());
+    range.sort([
+      { column: nameColIndex + 1, ascending: true }
+    ]);
   }
 
   static freezeTopRow() {

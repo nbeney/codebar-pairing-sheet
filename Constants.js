@@ -65,42 +65,54 @@ const SKILLS_MAP = {
   'typescript': 'TS',
 };
 
-const TUTORIAL_GROUP_MAP = {
-  'HTML 1: Introducing HTML': 'HTML/CSS',
-  'HTML/CSS 2: Introducing CSS': 'HTML/CSS',
-  'HTML/CSS 3: Beyond the basics': 'HTML/CSS',
-  'HTML/CSS 5: Dive into HTML5 & CSS3': 'HTML/CSS',
-  'HTML/CSS 6: Advanced HTML5': 'HTML/CSS',
-  'HTML/CSS/JS Project': 'HTML/CSS',
-  "I don't know, I'm a complete beginner.": 'Beginner',
-  'Java': 'Java',
-  'JavaScript Project': 'JS',
-  'JS: Beginning JavaScript': 'JS',
-  'JS: Building your own app': 'JS',
-  'JS: HTTP Requests, AJAX and APIs': 'JS',
-  'JS: Introduction to JavaScript': 'JS',
-  'JS: Introduction to JQuery': 'JS',
-  'JS: Introduction to Testing': 'JS',
-  'Other': 'Other',
-  'Other programming language': 'Other',
-  'Python': 'Python',
-  'React Project': 'React',
-};
-
 class Group {
-  constructor(name, color) {
+  constructor(name, color, tutorials) {
     this.name = name;
     this.color = color;
+    this.tutorials = tutorials;
   }
 }
 
 const GROUPS = [
-  new Group("Beginner", "#ffd6e8"),    // Soft pink
-  new Group("HTML/CSS", "#c7e9ff"),    // Light blue
-  new Group("Java", "#ffe5cc"),        // Peach
-  new Group("JS", "#fff9c4"),          // Pale yellow
-  new Group("Other", "#e1d5f8"),       // Lavender
-  new Group("Python", "#c8f0d4"),      // Mint green
-  new Group("React", "#b2e8f0"),       // Aqua
-  new Group("Unknown", "#e8e8e8")      // Light grey
+  new Group("Beginner", "#ffd6e8", [
+    "I don't know, I'm a complete beginner.",
+  ]),
+  new Group("HTML/CSS", "#c7e9ff", [
+    'HTML 1: Introducing HTML',
+    'HTML/CSS 2: Introducing CSS',
+    'HTML/CSS 3: Beyond the basics',
+    'HTML/CSS 5: Dive into HTML5 & CSS3',
+    'HTML/CSS 6: Advanced HTML5',
+    'HTML/CSS/JS Project',
+  ]),
+  new Group("Java", "#ffe5cc", [
+    'Java',
+  ]),
+  new Group("JS", "#fff9c4", [
+    'JavaScript Project',
+    'JS: Beginning JavaScript',
+    'JS: Building your own app',
+    'JS: HTTP Requests, AJAX and APIs',
+    'JS: Introduction to JavaScript',
+    'JS: Introduction to JQuery',
+    'JS: Introduction to Testing',
+  ]),
+  new Group("Other", "#e1d5f8", [
+    'Other',
+    'Other programming language',
+  ]),
+  new Group("Python", "#c8f0d4", [
+    'Python',
+  ]),
+  new Group("React", "#b2e8f0", [
+    'React Project',
+  ]),
+  new Group("Unknown", "#e8e8e8", []),
 ];
+
+const TUTORIAL_GROUP_MAP = {};
+for (const group of GROUPS) {
+  for (const tutorial of group.tutorials) {
+    TUTORIAL_GROUP_MAP[tutorial] = group;
+  }
+}
