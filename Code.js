@@ -63,6 +63,7 @@ function formatCsv() {
     Format.fillEmptyCells();
     Format.compactPronouns();
     Format.flagNewcomers();
+    Format.flagCoachesAndStudents();
     Format.deleteNewAttendeesColumn();
     Format.normalizeTechnologies('Skills', SKILLS_MAP);
     Format.normalizeTechnologies('Note', SKILLS_MAP);
@@ -74,8 +75,6 @@ function formatCsv() {
     Format.sortAttendees();
     Format.freezeTopRow();
     Format.formatHeaderRow();
-    Format.formatCoachRows();
-    Format.formatStudentRows();
     Format.duplicateHeaders();
     Format.resizeColumnsToFit();
     Format.clipColumns();

@@ -1,26 +1,26 @@
 // Number of columns after the CSV data has been formatted
-const NUM_COLS = 6
+const NUM_COLS = 6;
 
-const COL_REGISTERED_1 = 1
-const COL_NAME_1 = 2
-const COL_ROLE_1 = 3
-const COL_GROUP_1 = 4
-const COL_SKILLS_TUTORIAL_1 = 5
-const COL_NOTE_1 = 6
+const COL_REGISTERED_1 = 1;
+const COL_NAME_1 = 2;
+const COL_ROLE_1 = 3;
+const COL_GROUP_1 = 4;
+const COL_SKILLS_TUTORIAL_1 = 5;
+const COL_NOTE_1 = 6;
 
-const COL_REGISTERED_2 = COL_REGISTERED_1 + NUM_COLS
-const COL_NAME_2 = COL_NAME_1 + NUM_COLS
-const COL_ROLE_2 = COL_ROLE_1 + NUM_COLS
-const COL_GROUP_2 = COL_GROUP_1 + NUM_COLS
-const COL_SKILLS_TUTORIAL_2 = COL_SKILLS_TUTORIAL_1 + NUM_COLS
-const COL_NOTE_2 = COL_NOTE_1 + NUM_COLS
+const COL_REGISTERED_2 = COL_REGISTERED_1 + NUM_COLS;
+const COL_NAME_2 = COL_NAME_1 + NUM_COLS;
+const COL_ROLE_2 = COL_ROLE_1 + NUM_COLS;
+const COL_GROUP_2 = COL_GROUP_1 + NUM_COLS;
+const COL_SKILLS_TUTORIAL_2 = COL_SKILLS_TUTORIAL_1 + NUM_COLS;
+const COL_NOTE_2 = COL_NOTE_1 + NUM_COLS;
 
 const COLOR_HEADER = '#999999';
 const COLOR_COACH = '#d9ead3';
 const COLOR_STUDENT = '#cfe2f3';
 
-const ROLE_COACH = 'Coach'
-const ROLE_STUDENT = 'Student'
+const ROLE_COACH = 'Coach 🏫';
+const ROLE_STUDENT = 'Student 🎓';
 
 const PROP_SORT_CRITERIA = 'SORT_CRITERIA';
 const PROP_COACH_ROW_INDEX = 'COACH_ROW_INDEX';

@@ -97,6 +97,24 @@ class Format {
     sheet.getDataRange().setValues(data);
   }
 
+  static flagCoachesAndStudents() {
+    const sheet = SpreadsheetApp.getActiveSheet();
+    const data = sheet.getDataRange().getValues();
+    const roleColIndex = data[0].indexOf('Role');
+
+    if (roleColIndex === -1) return;
+    
+    for (let i = 1; i < data.length; i++) {
+      if (data[i][roleColIndex] === 'Coach') {
+        data[i][roleColIndex] = ROLE_COACH;
+      } else if (data[i][roleColIndex] === 'Student') {
+        data[i][roleColIndex] = ROLE_STUDENT;
+      }
+    }
+
+    sheet.getDataRange().setValues(data);
+  }
+
   static deleteNewAttendeesColumn() {
     const sheet = SpreadsheetApp.getActiveSheet();
     const data = sheet.getDataRange().getValues();
@@ -253,37 +271,6 @@ class Format {
     const headerRange = sheet.getRange(1, 1, 1, sheet.getLastColumn());
     headerRange.setFontWeight('bold');
     headerRange.setBackground(COLOR_HEADER);
-  }
-
-  // 👩‍🏫👨‍🎓
-  static formatCoachRows() {
-    const sheet = SpreadsheetApp.getActiveSheet();
-    const data = sheet.getDataRange().getValues();
-    const roleColIndex = data[0].indexOf('Role');
-
-    if (roleColIndex === -1) return;
-
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][roleColIndex] === ROLE_COACH) {
-        const rowRange = sheet.getRange(i + 1, 1, 1, sheet.getLastColumn());
-        rowRange.setBackground(COLOR_COACH);
-      }
-    }
-  }
-
-  static formatStudentRows() {
-    const sheet = SpreadsheetApp.getActiveSheet();
-    const data = sheet.getDataRange().getValues();
-    const roleColIndex = data[0].indexOf('Role');
-
-    if (roleColIndex === -1) return;
-
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][roleColIndex] === ROLE_STUDENT) {
-        const rowRange = sheet.getRange(i + 1, 1, 1, sheet.getLastColumn());
-        rowRange.setBackground(COLOR_STUDENT);
-      }
-    }
   }
 
   static duplicateHeaders() {
