@@ -256,8 +256,8 @@ function filterAbsentOnly() {
 
 function pasteSamplePairingCsvData() {
   const sheet = SpreadsheetApp.getActiveSheet();
-  const range = sheet.getRange(1, 1, SAMPLE_CSV_DATA.length, 1);
-  range.setValues(SAMPLE_CSV_DATA);
+  const range = sheet.getRange(1, 1, DEMO_CSV_DATA.length, 1);
+  range.setValues(DEMO_CSV_DATA);
 }
 
 function registerAtRandom() {
