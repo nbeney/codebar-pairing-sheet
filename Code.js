@@ -114,15 +114,15 @@ function formatCsv() {
           .toLowerCase()
           .split(/[/,\s]+/)
           .filter(w => w.length > 0);
-        
+
         // Check which pronoun sets are present
         const hasH = words.some(w => pronounSets.H.includes(w));
         const hasS = words.some(w => pronounSets.S.includes(w));
         const hasT = words.some(w => pronounSets.T.includes(w));
-        
+
         // Count how many sets are present
         const count = [hasH, hasS, hasT].filter(Boolean).length;
-        
+
         // Return appropriate tag
         if (count === 0) return match; // Not pronouns, keep original
         if (count === 1) {
@@ -130,12 +130,12 @@ function formatCsv() {
           if (hasS) return '[S]';
           if (hasT) return '[T]';
         }
-        
+
         // Multiple sets - return combination
         if (hasH && hasS) return '[H/S]';
         if (hasH && hasT) return '[H/T]';
         if (hasS && hasT) return '[S/T]';
-        
+
         return match; // Fallback
       });
 
@@ -597,18 +597,18 @@ function pairAtRandom() {
   // Collect registered coaches and students that aren't already paired
   const availableCoaches = [];
   const availableStudents = [];
-  
+
   for (let i = 1; i < data.length; i++) {
     const reg1 = data[i][COL_REGISTERED_1 - 1];
     const name1 = data[i][COL_NAME_1 - 1];
     const role1 = data[i][COL_ROLE_1 - 1];
     const reg2 = data[i][COL_REGISTERED_2 - 1];
     const name2 = data[i][COL_NAME_2 - 1];
-    
+
     // Check if left side is registered and right side is empty
     const leftRegistered = reg1 === 'TRUE' || reg1 === true;
     const rightEmpty = !reg2 || reg2 === 'FALSE' || reg2 === false || name2 === '' || name2 === '-';
-    
+
     if (leftRegistered && rightEmpty && name1 && name1 !== '-') {
       if (role1 === ROLE_COACH) {
         availableCoaches.push(i);
@@ -622,7 +622,7 @@ function pairAtRandom() {
     Utils.showInfo('No available coaches found for pairing.');
     return;
   }
-  
+
   if (availableStudents.length === 0) {
     Utils.showInfo('No available students found for pairing.');
     return;
@@ -630,42 +630,42 @@ function pairAtRandom() {
 
   const coachAssignments = {};
   let pairedCount = 0;
-  
+
   // Shuffle students for random pairing
   const shuffledStudents = [...availableStudents].sort(() => Math.random() - 0.5);
-  
+
   for (const studentRowIdx of shuffledStudents) {
     if (availableCoaches.length === 0) {
       break;
     }
-    
+
     // Find coaches that haven't reached their limit (2 students max)
     const availableCoachesForPairing = availableCoaches.filter(coachRowIdx => {
       return (coachAssignments[coachRowIdx] || 0) < 2;
     });
-    
+
     if (availableCoachesForPairing.length === 0) {
       break; // No more coaches available
     }
-    
+
     // Pick a random coach from available ones
     const randomCoachIdx = Math.floor(Math.random() * availableCoachesForPairing.length);
     const coachRowIdx = availableCoachesForPairing[randomCoachIdx];
-    
+
     // Move coach data to student's right side
     const sourceRange = sheet.getRange(coachRowIdx + 1, COL_REGISTERED_1, 1, NUM_COLS);
     const targetRange = sheet.getRange(studentRowIdx + 1, COL_REGISTERED_2, 1, NUM_COLS);
-    
+
     // Copy data instead of moving to preserve source for multiple assignments
     sourceRange.copyTo(targetRange, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
-    
+
     // Color the target range as coach color
     targetRange.setBackground(COLOR_COACH);
-    
+
     // Track assignments
     coachAssignments[coachRowIdx] = (coachAssignments[coachRowIdx] || 0) + 1;
     pairedCount++;
-    
+
     // If coach has reached limit, remove from available list
     if (coachAssignments[coachRowIdx] >= 2) {
       const indexToRemove = availableCoaches.indexOf(coachRowIdx);
@@ -674,7 +674,7 @@ function pairAtRandom() {
       }
     }
   }
-  
+
   Utils.showInfo(`Successfully paired ${pairedCount} students with coaches!`);
 }
 
@@ -742,7 +742,7 @@ function setColorfulBackgrounds() {
   const GROUP_PYTHON = ["Python", "#c8f0d4"];        // Mint green
   const GROUP_REACT = ["React", "#b2e8f0"];          // Aqua
   const GROUP_UNKNOWN = ["Unknown", "#e8e8e8"];      // Light grey
-  
+
   // Create array with all groups
   const groups = [
     GROUP_BEGINNER,
@@ -754,13 +754,13 @@ function setColorfulBackgrounds() {
     GROUP_REACT,
     GROUP_UNKNOWN
   ];
-  
+
   // Get the active spreadsheet and sheet
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  
+
   // Fill cells starting from A1
   groups.forEach((group, index) => {
-  // for (const [group, index] of groups) {
+    // for (const [group, index] of groups) {
     const [name, color] = group;
     const cell = sheet.getRange(`A${index + 1}`);
     cell.setValue(name).setBackground(color);
