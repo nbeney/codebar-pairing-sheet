@@ -255,6 +255,7 @@ class Format {
     headerRange.setBackground(COLOR_HEADER);
   }
 
+  // 👩‍🏫👨‍🎓
   static formatCoachRows() {
     const sheet = SpreadsheetApp.getActiveSheet();
     const data = sheet.getDataRange().getValues();
