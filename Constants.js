@@ -116,3 +116,24 @@ const TUTORIAL_GROUP_MAP = {
   'Python': 'Python',
   'React Project': 'React',
 };
+
+// Define group constants as [name, color] tuples
+const GROUP_BEGINNER = ["Beginner", "#ffd6e8"];    // Soft pink
+const GROUP_HTML_CSS = ["HTML/CSS", "#c7e9ff"];    // Light blue
+const GROUP_JAVA = ["Java", "#ffe5cc"];            // Peach
+const GROUP_JS = ["JS", "#fff9c4"];                // Pale yellow
+const GROUP_OTHER = ["Other", "#e1d5f8"];          // Lavender
+const GROUP_PYTHON = ["Python", "#c8f0d4"];        // Mint green
+const GROUP_REACT = ["React", "#b2e8f0"];          // Aqua
+const GROUP_UNKNOWN = ["Unknown", "#e8e8e8"];      // Light grey
+
+const GROUPS = [
+  GROUP_BEGINNER,
+  GROUP_HTML_CSS,
+  GROUP_JAVA,
+  GROUP_JS,
+  GROUP_OTHER,
+  GROUP_PYTHON,
+  GROUP_REACT,
+  GROUP_UNKNOWN
+];
