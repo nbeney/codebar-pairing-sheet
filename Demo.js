@@ -7,7 +7,7 @@ const DEMO_CSV_DATA = [
   ['false,Ethan Excellent (He),Coach,N/A,"","javascript, TypeScript, nodejs, ReactJS, Nextjs, python"'],
   ['true,Fiona Fabulous (she/her),Coach,N/A,"","html, css, javascript, node, React, Next.js, react-router, Redux, TypeScript, styled-components, GraphQL"'],
   ['false,Gabriel Giggly (he/him),Student,React Project,"",N/A'],
-  ['false,Hannah Happy (She),Coach,N/A,"Java, python, data science, backend ","java, python, SQL, nosql, web, c, Linux, rust"'],
+  ['false,"Hannah Happy (She, he)",Coach,N/A,"Java, python, data science, backend ","java, python, SQL, nosql, web, c, Linux, rust"'],
   ['false,Isaac Incredible (He/him),Student,Other,C#,N/A'],
   ['false,Jessica Jolly,Student,Java,"",N/A'],
   ['false,Kevin Kind (he/him/his),Coach,N/A,Junior software developer with experience with JavaScript/TypeScript,"javascript, React, Express, back-end, Front-end"'],
