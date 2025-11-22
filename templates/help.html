@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      line-height: 1.6;
+      padding: 16px;
+      margin: 0;
+      color: #333;
+    }
+    
+    h1 {
+      font-size: 20px;
+      color: #1a73e8;
+      margin-top: 0;
+      margin-bottom: 16px;
+      border-bottom: 2px solid #1a73e8;
+      padding-bottom: 8px;
+    }
+    
+    h2 {
+      font-size: 16px;
+      color: #5f6368;
+      margin-top: 24px;
+      margin-bottom: 8px;
+    }
+    
+    .menu-item {
+      background: #f1f3f4;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 4px;
+      border-left: 4px solid #1a73e8;
+    }
+    
+    .menu-item-title {
+      font-weight: bold;
+      color: #1a73e8;
+      margin-bottom: 4px;
+    }
+    
+    .warning {
+      background: #fef7e0;
+      border-left: 4px solid #f9ab00;
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 4px;
+    }
+    
+    .tip {
+      background: #e8f5e9;
+      border-left: 4px solid #34a853;
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 4px;
+    }
+    
+    code {
+      background: #f1f3f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+    }
+    
+    ol, ul {
+      margin: 8px 0;
+      padding-left: 24px;
+    }
+    
+    li {
+      margin-bottom: 8px;
+    }
+    
+    .close-button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin: 24px 0 16px 0;
+      background: #1a73e8;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .close-button:hover {
+      background: #1557b0;
+    }
+    
+    .close-button:active {
+      background: #0d47a1;
+    }
+  </style>
+</head>
+<body>
+  <h1>🏳️‍🌈 Codebar Helper Guide</h1>
+  
+  <p>This tool helps format and organize Codebar workshop attendance data from the Pairing CSV export.</p>
+  
+  <h2>📋 Getting Started</h2>
+  
+  <div class="tip">
+    <strong>Quick Start:</strong>
+    <ol>
+      <li>Export your Pairing CSV from Codebar</li>
+      <li>Paste the data into cell A1</li>
+      <li>Click <strong>Codebar 🏳️‍🌈 → Format 🌈</strong></li>
+      <li>That's it!</li>
+    </ol>
+  </div>
+  
+  <h2>🛠️ Menu Options</h2>
+  
+  <div class="menu-item">
+    <div class="menu-item-title">Format 🌈</div>
+    <p>The main formatting function that:</p>
+    <ul>
+      <li>Splits CSV data into columns</li>
+      <li>Compacts pronouns (e.g., "(she/her)" → "[S]")</li>
+      <li>Marks new attendees with 🐣 emoji</li>
+      <li>Normalizes technology names (JavaScript → JS, etc.)</li>
+      <li>Adds checkboxes for attendance tracking</li>
+      <li>Color-codes rows (green for coaches, blue for students)</li>
+      <li>Adds a "Group" column for organizing pairs</li>
+      <li>Enables filtering and sorting</li>
+    </ul>
+  </div>
+  
+  <div class="menu-item">
+    <div class="menu-item-title">Reset... ❌</div>
+    <p>Clears the entire sheet and resets it to a blank state. Use this to start fresh with new data.</p>
+  </div>
+  
+  <div class="warning">
+    <strong>⚠️ Warning:</strong> Reset will delete ALL data in the sheet. You'll be asked to confirm before proceeding.
+  </div>
+  
+  <h2>🔀 Sorting Options</h2>
+  
+  <div class="menu-item">
+    <div class="menu-item-title">Sort by name</div>
+    <p>Sorts all attendees alphabetically by name.</p>
+  </div>
+  
+  <div class="menu-item">
+    <div class="menu-item-title">Sort by role/name</div>
+    <p>Sorts by role (Coach/Student) first, then by name within each role.</p>
+  </div>
+  
+  <div class="menu-item">
+    <div class="menu-item-title">Sort by group/role/name</div>
+    <p>Sorts by group assignment, then role, then name. Useful after pairing students with coaches.</p>
+  </div>
+  
+  <h2>👁️ Filter Options</h2>
+  
+  <div class="menu-item">
+    <div class="menu-item-title">Show all</div>
+    <p>Displays all attendees regardless of attendance status.</p>
+  </div>
+  
+  <div class="menu-item">
+    <div class="menu-item-title">Show present only 👍</div>
+    <p>Shows only attendees with checked boxes (present).</p>
+  </div>
+  
+  <div class="menu-item">
+    <div class="menu-item-title">Show absent only 👎</div>
+    <p>Shows only attendees with unchecked boxes (absent).</p>
+  </div>
+  
+  <h2>📚 Additional Features</h2>
+  
+  <div class="menu-item">
+    <div class="menu-item-title">Load sample data 📚</div>
+    <p>Loads example data to test the formatting. Great for learning how the tool works!</p>
+  </div>
+  
+  <h2>💡 Tips & Workflow</h2>
+  
+  <div class="tip">
+    <strong>Recommended Workflow:</strong>
+    <ol>
+      <li><strong>Before the event:</strong> Import and format the Pairing CSV</li>
+      <li><strong>During check-in:</strong> Use checkboxes to mark attendance</li>
+      <li><strong>During pairing:</strong> Use "Show present only" to see who's here</li>
+      <li><strong>Assign groups:</strong> Enter group numbers in the Group column</li>
+      <li><strong>Organize:</strong> Use "Sort by group/role/name" to see pairs together</li>
+    </ol>
+  </div>
+  
+  <div class="tip">
+    <strong>Color Coding:</strong>
+    <ul>
+      <li><strong style="color: #38761d;">Green rows</strong> = Coaches</li>
+      <li><strong style="color: #0b5394;">Blue rows</strong> = Students</li>
+      <li><strong>🐣 emoji</strong> = New attendee (first time!)</li>
+    </ul>
+  </div>
+  
+  <div class="tip">
+    <strong>Using the Group Column:</strong>
+    <p>After pairing students with coaches, assign the same number to each pair in the Group column. This makes it easy to keep track of who's working together and sort them together.</p>
+  </div>
+  
+  <h2>❓ Troubleshooting</h2>
+  
+  <p><strong>Data not formatting correctly?</strong></p>
+  <ul>
+    <li>Make sure you pasted the raw CSV data in cell A1</li>
+    <li>Try running Reset and reimporting the data</li>
+    <li>Check that the CSV has the expected columns</li>
+  </ul>
+  
+  <p><strong>Filter not working?</strong></p>
+  <ul>
+    <li>Make sure the sheet is formatted first</li>
+    <li>Try clicking "Show all" to reset the filter</li>
+  </ul>
+  
+  <button class="close-button" onclick="google.script.host.close()">Close</button>
+  
+  <hr style="margin: 24px 0; border: none; border-top: 1px solid #dadce0;">
+  
+  <p style="font-size: 11px; color: #5f6368; text-align: center;">
+    Made with ❤️ for Codebar workshops by Nic Beney
+  </p>
+</body>
+</html>
