@@ -418,8 +418,7 @@ function setColorfulBackgrounds() {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
   for (const [index, group] of GROUPS.entries()) {
-    const [name, color] = group;
     const cell = sheet.getRange(`A${index + 31}`);
-    cell.setValue(name).setBackground(color);
+    cell.setValue(group.name).setBackground(group.color);
   }
 }
