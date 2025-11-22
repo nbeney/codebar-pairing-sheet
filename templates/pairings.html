@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base target="_top">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      line-height: 1.4;
+      padding: 12px;
+      margin: 0;
+      color: #333;
+    }
+
+    h1 {
+      font-size: 20px;
+      color: #1a73e8;
+      margin-top: 0;
+      margin-bottom: 12px;
+      border-bottom: 2px solid #1a73e8;
+      padding-bottom: 6px;
+    }
+
+    h2 {
+      font-size: 16px;
+      color: #5f6368;
+      margin-top: 16px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+    }
+
+    .stats {
+      background: #e8f5e9;
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-around;
+      text-align: center;
+    }
+
+    .stat-item {
+      flex: 1;
+    }
+
+    .stat-number {
+      font-size: 18px;
+      font-weight: bold;
+      color: #34a853;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #5f6368;
+      text-transform: uppercase;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+      background: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    thead {
+      background: #1a73e8;
+      color: white;
+    }
+
+    th {
+      padding: 8px 10px;
+      text-align: left;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    td {
+      padding: 6px 10px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background: #f8f9fa;
+    }
+
+    .group-header {
+      background: #e8f5e9;
+      font-weight: bold;
+      color: #1a73e8;
+    }
+
+    .coach-cell {
+      color: #5f6368;
+      font-weight: 500;
+    }
+
+    .student-cell {
+      color: #5f6368;
+    }
+
+    .unpaired-table {
+      margin-bottom: 16px;
+    }
+
+    .unpaired-table thead {
+      background: #f9ab00;
+    }
+
+    /* .unpaired-table tbody tr:nth-child(even) {
+      background: #fef7e0;
+    } */
+
+    .close-button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 16px 0 12px 0;
+      background: #1a73e8;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .close-button:hover {
+      background: #1557b0;
+    }
+
+    .close-button:active {
+      background: #0d47a1;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #5f6368;
+      padding: 24px 16px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      margin: 12px 0;
+    }
+
+    .emoji {
+      font-size: 16px;
+      margin-right: 6px;
+    }
+
+    .section-wrapper {
+      margin-bottom: 20px;
+    }
+    
+    .unpaired-container {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .unpaired-section {
+      flex: 1;
+    }
+    
+    .unpaired-section h2 {
+      margin-top: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="content">
+    <?
+      // Calculate stats
+      let totalPairings = 0;
+      let totalStudentsInPairs = 0;
+      
+      for (const group in pairings) {
+        for (const entry of pairings[group]) {
+          totalPairings++;
+          totalStudentsInPairs += entry.students.length;
+        }
+      }
+      
+      const hasGroups = Object.keys(pairings).length > 0;
+      const hasData = hasGroups || unpairedStudents.length > 0 || unpairedCoaches.length > 0;
+    ?>
+    
+    <!-- Stats section -->
+    <div class="stats">
+      <div class="stat-item">
+        <div class="stat-number"><?= totalPairings ?></div>
+        <div class="stat-label">Pairings</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number"><?= totalStudentsInPairs ?></div>
+        <div class="stat-label">Students Paired</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number"><?= unpairedStudents.length ?></div>
+        <div class="stat-label">Unpaired Students</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number"><?= unpairedCoaches.length ?></div>
+        <div class="stat-label">Unpaired Coaches</div>
+      </div>
+    </div>
+    
+    <? if (!hasData) { ?>
+      <!-- Empty state -->
+      <div class="empty-state">
+        <h3>🤷‍♀️ No pairing data found</h3>
+        <p>Make sure you have formatted your data and assigned groups to create pairings.</p>
+      </div>
+    <? } else { ?>
+      
+      <? if (hasGroups) { ?>
+        <!-- Pairings table -->
+        <div class="section-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th colspan="2"><span class="emoji">👩‍🏫👨‍🎓</span>Paired Coaches & Students</th>
+              </tr>
+            </thead>
+            <tbody>
+              <? for (const group in pairings) { ?>
+                <!-- Group header row -->
+                <tr class="group-header">
+                  <td colspan="2"><span class="emoji">📂</span>Group: <?= group ?></td>
+                </tr>
+                <? for (const entry of pairings[group]) { ?>
+                  <tr>
+                    <td class="coach-cell"><span class="emoji">👩‍🏫</span><?= entry.coach ?></td>
+                    <td class="student-cell">
+                      <? if (entry.students.length > 0) { ?>
+                        <? for (let i = 0; i < entry.students.length; i++) { ?>
+                          <? if (i > 0) { ?><br><? } ?>
+                          <span class="emoji">👨‍🎓</span><?= entry.students[i] ?>
+                        <? } ?>
+                      <? } else { ?>
+                        <em style="color: #f9ab00;">No students assigned</em>
+                      <? } ?>
+                    </td>
+                  </tr>
+                <? } ?>
+              <? } ?>
+            </tbody>
+          </table>
+        </div>
+      <? } ?>
+      
+      <? if (unpairedCoaches.length > 0 || unpairedStudents.length > 0) { ?>
+        <!-- Unpaired coaches and students side by side -->
+        <div class="unpaired-container">
+          <? if (unpairedCoaches.length > 0) { ?>
+            <div class="unpaired-section">
+              <table class="unpaired-table">
+                <thead>
+                  <tr>
+                    <th><span class="emoji">👩‍🏫</span>Unpaired Coaches (<?= unpairedCoaches.length ?>)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <? for (let i = 0; i < unpairedCoaches.length; i++) { ?>
+                    <tr>
+                      <td><span class="emoji">👩‍🏫</span><?= unpairedCoaches[i] ?></td>
+                    </tr>
+                  <? } ?>
+                </tbody>
+              </table>
+            </div>
+          <? } ?>
+          
+          <? if (unpairedStudents.length > 0) { ?>
+            <div class="unpaired-section">
+              <table class="unpaired-table">
+                <thead>
+                  <tr>
+                    <th><span class="emoji">👨‍🎓</span>Unpaired Students (<?= unpairedStudents.length ?>)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <? for (let i = 0; i < unpairedStudents.length; i++) { ?>
+                    <tr>
+                      <td><span class="emoji">👨‍🎓</span><?= unpairedStudents[i] ?></td>
+                    </tr>
+                  <? } ?>
+                </tbody>
+              </table>
+            </div>
+          <? } ?>
+        </div>
+      <? } ?>
+      
+    <? } ?>
+  </div>
+
+  <button class="close-button" onclick="google.script.host.close()">Close</button>
+
+  <hr style="margin: 24px 0; border: none; border-top: 1px solid #dadce0;">
+
+  <p style="font-size: 11px; color: #5f6368; text-align: center;">
+    Made with ❤️ for Codebar workshops
+  </p>
+
+</body>
+
+</html>
