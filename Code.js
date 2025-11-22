@@ -27,11 +27,6 @@ function onOpen() {
     .addSeparator()
     .addItem('Help 🛟', 'showHelp')
     .addToUi();
-
-  // // Uncomment these 2 lines for development only
-  // reset();
-  // pasteSamplePairingCsvData();
-  // formatCsv();
 }
 
 function reset() {
@@ -63,343 +58,30 @@ function reset() {
 }
 
 function formatCsv() {
-  const sheet = SpreadsheetApp.getActiveSheet();
-
-  // Step 1: Split CSV into columns
-  function splitCSVIntoColumns() {
-    sheet.getActiveCell().getDataRegion().splitTextToColumns(",");
-  }
-
-  // Step 2: Fill the empty cells to avoid problems later
-  function fillEmptyCells() {
-    const data = sheet.getDataRange().getValues();
-    const numRows = data.length;
-    const numColumns = data[0].length;
-
-    // Iterate through all cells in the data
-    for (let i = 0; i < numRows; i++) {
-      for (let j = 0; j < numColumns; j++) {
-        // Check if the cell is empty (null, undefined, or empty string)
-        if (data[i][j] === null || data[i][j] === undefined || data[i][j] === '') {
-          data[i][j] = '-'; // Replace with empty marker string for consistency
-        }
-      }
-    }
-
-    // Write the modified data back to the sheet
-    sheet.getRange(1, 1, numRows, numColumns).setValues(data);
-  }
-  // Step 3: Compact pronouns in Name column
-  function compactPronouns() {
-    const data = sheet.getDataRange().getValues();
-    const nameColIndex = data[0].indexOf('Name');
-
-    if (nameColIndex === -1) return;
-
-    for (let i = 1; i < data.length; i++) {
-      let name = data[i][nameColIndex].toString();
-
-      // Define pronoun sets
-      const pronounSets = {
-        H: ['he', 'him', 'his'],
-        S: ['she', 'her', 'hers'],
-        T: ['they', 'them', 'theirs']
-      };
-
-      // Extract and classify pronouns
-      name = name.replace(/\([^)]+\)/gi, (match) => {
-        // Extract words from parentheses, splitting on common separators
-        const words = match
-          .slice(1, -1) // Remove parentheses
-          .toLowerCase()
-          .split(/[/,\s]+/)
-          .filter(w => w.length > 0);
-
-        // Check which pronoun sets are present
-        const hasH = words.some(w => pronounSets.H.includes(w));
-        const hasS = words.some(w => pronounSets.S.includes(w));
-        const hasT = words.some(w => pronounSets.T.includes(w));
-
-        // Count how many sets are present
-        const count = [hasH, hasS, hasT].filter(Boolean).length;
-
-        // Return appropriate tag
-        if (count === 0) return match; // Not pronouns, keep original
-        if (count === 1) {
-          if (hasH) return '[H]';
-          if (hasS) return '[S]';
-          if (hasT) return '[T]';
-        }
-
-        // Multiple sets - return combination
-        if (hasH && hasS) return '[H/S]';
-        if (hasH && hasT) return '[H/T]';
-        if (hasS && hasT) return '[S/T]';
-
-        return match; // Fallback
-      });
-
-      data[i][nameColIndex] = name;
-    }
-
-    sheet.getDataRange().setValues(data);
-  }
-
-  // Step 4: Flag newcomers with chick emoji
-  function flagNewcomers() {
-    const data = sheet.getDataRange().getValues();
-    const newAttendeeColIndex = data[0].indexOf('New attendee');
-    const nameColIndex = data[0].indexOf('Name');
-
-    if (newAttendeeColIndex === -1 || nameColIndex === -1) return;
-
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][newAttendeeColIndex].toString().toLowerCase() === 'true') {
-        data[i][nameColIndex] = data[i][nameColIndex] + ' 🐥';
-      }
-    }
-
-    sheet.getDataRange().setValues(data);
-  }
-
-  // Step 5: Delete New attendees column
-  function deleteNewAttendeesColumn() {
-    const data = sheet.getDataRange().getValues();
-    const newAttendeeColIndex = data[0].indexOf('New attendee');
-
-    if (newAttendeeColIndex !== -1) {
-      sheet.deleteColumn(newAttendeeColIndex + 1);
-    }
-  }
-
-  // Step 6: Proper case for technologies
-  function normalizeTechnologies(columnName, skillsMap) {
-    const data = sheet.getDataRange().getValues();
-    const colIndex = data[0].indexOf(columnName);
-
-    if (colIndex === -1) return;
-
-    for (let i = 1; i < data.length; i++) {
-      let skills = data[i][colIndex].toString();
-
-      if (skills && skills !== 'N/A') {
-        Object.keys(skillsMap).forEach(key => {
-          const regex = new RegExp('\\b' + key + '\\b', 'gi');
-          skills = skills.replace(regex, skillsMap[key]);
-        });
-
-        data[i][colIndex] = skills;
-      }
-    }
-
-    sheet.getDataRange().setValues(data);
-  }
-
-  // Step 7: Copy Skills to Tutorial for Coaches
-  function copySkillsForCoaches() {
-    const data = sheet.getDataRange().getValues();
-    const roleColIndex = data[0].indexOf('Role');
-    const skillsColIndex = data[0].indexOf('Skills');
-    const tutorialColIndex = data[0].indexOf('Tutorial');
-
-    if (roleColIndex === -1 || skillsColIndex === -1 || tutorialColIndex === -1) return;
-
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][roleColIndex] === ROLE_COACH) {
-        data[i][tutorialColIndex] = data[i][skillsColIndex];
-      }
-    }
-
-    sheet.getDataRange().setValues(data);
-  }
-
-  // Step 8: Delete Skills column and rename Tutorial -> Skills/Tutorial
-  function deleteSkillsAndRenameTutorialColumn() {
-    const data = sheet.getDataRange().getValues();
-    const skillsColIndex = data[0].indexOf('Skills');
-
-    if (skillsColIndex !== -1) {
-      sheet.deleteColumn(skillsColIndex + 1);
-    }
-
-    // Refresh data after deletion
-    const updatedData = sheet.getDataRange().getValues();
-    const tutorialColIndex = updatedData[0].indexOf('Tutorial');
-
-    if (tutorialColIndex !== -1) {
-      sheet.getRange(1, tutorialColIndex + 1).setValue('Skills/Tutorial');
-    }
-  }
-
-  // Step 9: Insert ?? column with checkboxes before Name
-  function insertCheckboxColumn() {
-    const data = sheet.getDataRange().getValues();
-    const nameColIndex = data[0].indexOf('Name');
-
-    if (nameColIndex !== -1) {
-      sheet.insertColumnBefore(nameColIndex + 1);
-      const newData = sheet.getDataRange().getValues();
-
-      // Set header
-      sheet.getRange(1, nameColIndex + 1).setValue('??');
-
-      // Insert checkboxes for all data rows
-      for (let i = 2; i <= newData.length; i++) {
-        sheet.getRange(i, nameColIndex + 1).insertCheckboxes();
-      }
-    }
-  }
-
-  // Step 10: Insert Group column after Role
-  function insertGroupColumn() {
-    const data = sheet.getDataRange().getValues();
-    const roleColIndex = data[0].indexOf('Role');
-
-    if (roleColIndex !== -1) {
-      sheet.insertColumnAfter(roleColIndex + 1);
-      sheet.getRange(1, roleColIndex + 2).setValue('Group');
-    }
-  }
-
-  // Step 11: Set group for students
-  function setGroupForStudentsAndAddValidation() {
-    const data = sheet.getDataRange().getValues();
-    const roleColIndex = data[0].indexOf('Role');
-    const groupColIndex = data[0].indexOf('Group');
-    const skillsTutorialColIndex = data[0].indexOf('Skills/Tutorial');
-
-    if (roleColIndex === -1 || groupColIndex === -1) return;
-
-    // Data part
-
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][roleColIndex] === ROLE_STUDENT) {
-        const skillsTutorial = data[i][skillsTutorialColIndex].toString();
-        const group = TUTORIAL_GROUP_MAP[skillsTutorial];
-        if (group !== undefined) {
-          data[i][groupColIndex] = group;
-        }
-      }
-    }
-    sheet.getDataRange().setValues(data);
-
-    // Validation part
-
-    const groups = Array.from(new Set(Object.values(TUTORIAL_GROUP_MAP))).sort();
-    const val = SpreadsheetApp.newDataValidation()
-      .setAllowInvalid(true)
-      .requireValueInList(groups, true)
-      .build();
-    sheet.getRange(2, groupColIndex + 1, sheet.getLastRow() - 1).setDataValidation(val);
-  }
-
-  // Step 12: Sort by Role and Name
-  function sortAttendees() {
-    const data = sheet.getDataRange().getValues();
-    const roleColIndex = data[0].indexOf('Role');
-    const nameColIndex = data[0].indexOf('Name');
-
-    if (roleColIndex !== -1 && nameColIndex !== -1) {
-      const range = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn());
-      range.sort([
-        // { column: roleColIndex + 1, ascending: true },
-        { column: nameColIndex + 1, ascending: true }
-      ]);
-    }
-  }
-
-  // Step 13: Freeze top row
-  function freezeTopRow() {
-    sheet.setFrozenRows(1);
-  }
-
-  // Step 14: Format header row
-  function formatHeaderRow() {
-    const headerRange = sheet.getRange(1, 1, 1, sheet.getLastColumn());
-    headerRange.setFontWeight('bold');
-    headerRange.setBackground(COLOR_HEADER);
-  }
-
-  // Step 15: Format Coach rows
-  function formatCoachRows() {
-    const data = sheet.getDataRange().getValues();
-    const roleColIndex = data[0].indexOf('Role');
-
-    if (roleColIndex === -1) return;
-
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][roleColIndex] === ROLE_COACH) {
-        const rowRange = sheet.getRange(i + 1, 1, 1, sheet.getLastColumn());
-        rowRange.setBackground(COLOR_COACH);
-      }
-    }
-  }
-
-  // Step 16: Format Student rows
-  function formatStudentRows() {
-    const data = sheet.getDataRange().getValues();
-    const roleColIndex = data[0].indexOf('Role');
-
-    if (roleColIndex === -1) return;
-
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][roleColIndex] === ROLE_STUDENT) {
-        const rowRange = sheet.getRange(i + 1, 1, 1, sheet.getLastColumn());
-        rowRange.setBackground(COLOR_STUDENT);
-      }
-    }
-  }
-
-  // Step 17: Duplicate headers
-  function duplicateHeaders() {
-    const source = sheet.getRange('A1').offset(0, 0, 1, NUM_COLS);
-    const target = sheet.getRange('G1');
-    source.copyTo(target, SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
-  }
-
-  // Step 18: Resize all columns to fit data
-  function resizeColumnsToFit() {
-    const numColumns = sheet.getLastColumn();
-    for (let i = 1; i <= numColumns; i++) {
-      sheet.autoResizeColumn(i);
-    }
-  }
-
-  // Step 19: Clip all the columns
-  function clipColumns() {
-    sheet.getActiveRange().getDataRegion().setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
-  }
-
-  // Step 20: Add filter
-  function addFilter() {
-    sheet.getDataRange().createFilter();
-  }
-
-  // Execute all steps in order
   try {
-    splitCSVIntoColumns();
-    fillEmptyCells();
-    compactPronouns();
-    flagNewcomers();
-    deleteNewAttendeesColumn();
-    normalizeTechnologies('Skills', SKILLS_MAP);
-    normalizeTechnologies('Note', SKILLS_MAP);
-    copySkillsForCoaches();
-    deleteSkillsAndRenameTutorialColumn();
-    insertCheckboxColumn();
-    insertGroupColumn();
-    setGroupForStudentsAndAddValidation();
-    sortAttendees();
-    freezeTopRow();
-    formatHeaderRow();
-    formatCoachRows();
-    formatStudentRows();
-    duplicateHeaders();
-    resizeColumnsToFit();
-    clipColumns();
-    addFilter();
+    Format.splitCSVIntoColumns();
+    Format.fillEmptyCells();
+    Format.compactPronouns();
+    Format.flagNewcomers();
+    Format.deleteNewAttendeesColumn();
+    Format.normalizeTechnologies('Skills', SKILLS_MAP);
+    Format.normalizeTechnologies('Note', SKILLS_MAP);
+    Format.copySkillsForCoaches();
+    Format.deleteSkillsAndRenameTutorialColumn();
+    Format.insertCheckboxColumn();
+    Format.insertGroupColumn();
+    Format.setGroupForStudentsAndAddValidation();
+    Format.sortAttendees();
+    Format.freezeTopRow();
+    Format.formatHeaderRow();
+    Format.formatCoachRows();
+    Format.formatStudentRows();
+    Format.duplicateHeaders();
+    Format.resizeColumnsToFit();
+    Format.clipColumns();
+    Format.addFilter();
 
-    Utils.Utils.showInfo('Formatting completed successfully!');
+    Utils.showInfo('Formatting completed successfully!');
   } catch (e) {
     Utils.showError(e.message);
   }
@@ -733,15 +415,11 @@ function collectPairings() {
 }
 
 function setColorfulBackgrounds() {
-  // Get the active spreadsheet and sheet
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
-  // Fill cells starting from A1
-  GROUPS.forEach((group, index) => {
-    // for (const [group, index] of groups) {
+  for (const [index, group] of GROUPS.entries()) {
     const [name, color] = group;
-    const cell = sheet.getRange(`A${index + 1}`);
+    const cell = sheet.getRange(`A${index + 31}`);
     cell.setValue(name).setBackground(color);
-  });
-  // }
+  }
 }
