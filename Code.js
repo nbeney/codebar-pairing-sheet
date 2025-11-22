@@ -35,7 +35,7 @@ function onOpen() {
 }
 
 function reset() {
-  if (!askConfirmation('❌ Warning', 'This will clear the whole sheet. Do you want to continue?')) {
+  if (!Utils.askConfirmation('❌ Warning', 'This will clear the whole sheet. Do you want to continue?')) {
     return;
   }
 
@@ -399,9 +399,9 @@ function formatCsv() {
     clipColumns();
     addFilter();
 
-    showInfo('Formatting completed successfully!');
+    Utils.Utils.showInfo('Formatting completed successfully!');
   } catch (e) {
-    showError(e.message);
+    Utils.showError(e.message);
   }
 }
 
@@ -413,7 +413,7 @@ function selectCoach() {
   const rightRole = sheet.getRange(rowIdx, COL_ROLE_2).getValue();
 
   if (leftRole !== ROLE_COACH && rightRole !== ROLE_COACH) {
-    showInfo('Current row does not contain a coach.');
+    Utils.showInfo('Current row does not contain a coach.');
     return;
   }
 
@@ -435,16 +435,16 @@ function assignSelectedCoachToStudent() {
   const coachColIdx = PropertiesService.getScriptProperties().getProperty(PROP_COACH_COL_INDEX);
 
   if (!coachRowIdx || !coachColIdx) {
-    showInfo('Please select a coach first.');
+    Utils.showInfo('Please select a coach first.');
     return;
   } else if (leftRole === ROLE_COACH) {
-    showInfo('Cannot assign a coach to a coach.');
+    Utils.showInfo('Cannot assign a coach to a coach.');
     return;
   } else if (rightRole === ROLE_COACH) {
-    showInfo('The student is already assigned to a coach.');
+    Utils.showInfo('The student is already assigned to a coach.');
     return;
   } else if (leftRole !== ROLE_STUDENT) {
-    showInfo('Current row does not contain a student.');
+    Utils.showInfo('Current row does not contain a student.');
     return;
   }
 
@@ -481,7 +481,7 @@ function showPairings() {
 
 // This macro should be imported and assigned to Ctrl-Alt-Shift 5
 function showNumbers() {
-  showInfo('Not yet implemented!');
+  Utils.showInfo('Not yet implemented!');
 }
 
 // This macro should be imported and assigned to Ctrl-Alt-Shift 3
@@ -619,12 +619,12 @@ function pairAtRandom() {
   }
 
   if (availableCoaches.length === 0) {
-    showInfo('No available coaches found for pairing.');
+    Utils.showInfo('No available coaches found for pairing.');
     return;
   }
   
   if (availableStudents.length === 0) {
-    showInfo('No available students found for pairing.');
+    Utils.showInfo('No available students found for pairing.');
     return;
   }
 
@@ -675,7 +675,7 @@ function pairAtRandom() {
     }
   }
   
-  showInfo(`Successfully paired ${pairedCount} students with coaches!`);
+  Utils.showInfo(`Successfully paired ${pairedCount} students with coaches!`);
 }
 
 function showHelp() {
@@ -685,22 +685,6 @@ function showHelp() {
     .setWidth(600)
     .setHeight(500);
   ui.showSidebar(html);
-}
-
-function showInfo(message) {
-  const ui = SpreadsheetApp.getUi();
-  ui.alert('✅ Info', message, ui.ButtonSet.OK);
-}
-
-function showError(message) {
-  const ui = SpreadsheetApp.getUi();
-  ui.alert('💥 Error', message, ui.ButtonSet.OK);
-}
-
-function askConfirmation(title, message) {
-  const ui = SpreadsheetApp.getUi();
-  const response = ui.alert(title, message, ui.ButtonSet.YES_NO);
-  return response === ui.Button.YES;
 }
 
 function collectPairings() {
