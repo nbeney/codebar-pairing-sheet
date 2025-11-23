@@ -28,7 +28,7 @@ const DEMO_CSV_DATA = [
     ['false,Zara Zippy (she/her),Student,React Project,"",N/A'],
 ];
 
-class Demo {
+class Tutorial {
     static pasteSamplePairingCsvData() {
         const sheet = SpreadsheetApp.getActiveSheet();
         const range = sheet.getRange(1, 1, DEMO_CSV_DATA.length, 1);
@@ -136,7 +136,7 @@ class Demo {
     }
 
     static step1ResetSheet() {
-        Demo.showStep(
+        Tutorial.showStep(
             'Step 1: Reset Sheet',
             [
                 'This will clear the entire sheet and prepare it for new data.',
@@ -145,13 +145,13 @@ class Demo {
             ],
             () => {
                 reset();
-                Demo.step2PastePairingCsvData();
+                Tutorial.step2PastePairingCsvData();
             }
         );
     }
 
     static step2PastePairingCsvData() {
-        Demo.showStep(
+        Tutorial.showStep(
             'Step 2: Paste Pairing CSV Data',
             [
                 'This will paste sample workshop registration data into the sheet.',
@@ -159,14 +159,14 @@ class Demo {
                 'Proceed with pasting data?'
             ],
             () => {
-                Demo.pasteSamplePairingCsvData();
-                Demo.step3FormatCsv();
+                Tutorial.pasteSamplePairingCsvData();
+                Tutorial.step3FormatCsv();
             }
         );
     }
 
     static step3FormatCsv() {
-        Demo.showStep(
+        Tutorial.showStep(
             'Step 3: Format CSV Data',
             [
                 'This will format the raw CSV data by:',
@@ -179,13 +179,13 @@ class Demo {
             ],
             () => {
                 formatCsv();
-                Demo.step4RegisterParticipants();
+                Tutorial.step4RegisterParticipants();
             }
         );
     }
 
     static step4RegisterParticipants() {
-        Demo.showStep(
+        Tutorial.showStep(
             'Step 4: Register Participants',
             [
                 'This will randomly check participants as "present" for the workshop (about 70% attendance rate).',
@@ -193,14 +193,14 @@ class Demo {
                 'Proceed with registration?'
             ],
             () => {
-                Demo.registerAtRandom();
-                Demo.step5SortParticipants();
+                Tutorial.registerAtRandom();
+                Tutorial.step5SortParticipants();
             }
         );
     }
 
     static step5SortParticipants() {
-        Demo.showStep(
+        Tutorial.showStep(
             'Step 5: Sort Participants',
             [
                 'This will sort participants by Group > Role > Name to make pairing easier.',
@@ -209,13 +209,13 @@ class Demo {
             ],
             () => {
                 sortByGroupRoleName();
-                Demo.step6AssignCoachesToGroups();
+                Tutorial.step6AssignCoachesToGroups();
             }
         );
     }
 
     static step6AssignCoachesToGroups() {
-        Demo.showStep(
+        Tutorial.showStep(
             'Step 6: Assign Coaches to Groups',
             [
                 'In a real workshop, you would manually assign coaches to appropriate tutorial groups.',
@@ -225,13 +225,13 @@ class Demo {
                 'Proceed to next step?'
             ],
             () => {
-                Demo.step7SortParticipants();
+                Tutorial.step7SortParticipants();
             }
         );
     }
 
     static step7SortParticipants() {
-        Demo.showStep(
+        Tutorial.showStep(
             'Step 7: Sort Participants',
             [
                 'This will sort participants by Role > Group > Name to optimize pairing workflow.',
@@ -240,13 +240,13 @@ class Demo {
             ],
             () => {
                 sortByRoleGroupName();
-                Demo.step8AssignCoachesToStudents();
+                Tutorial.step8AssignCoachesToStudents();
             }
         );
     }
 
     static step8AssignCoachesToStudents() {
-        Demo.showStep(
+        Tutorial.showStep(
             'Step 8: Assign Coaches to Students',
             [
                 'This will randomly pair registered coaches with registered students.',
@@ -254,14 +254,14 @@ class Demo {
                 'Proceed with pairing?'
             ],
             () => {
-                Demo.pairAtRandom();
-                Demo.step9ShowPairings();
+                Tutorial.pairAtRandom();
+                Tutorial.step9ShowPairings();
             }
         );
     }
 
     static step9ShowPairings() {
-        Demo.showStep(
+        Tutorial.showStep(
             'Step 9: Show Pairings',
             [
                 'This will display a summary of all pairings, unpaired participants, and missing participants.',

@@ -19,22 +19,22 @@ function onOpen() {
     .addItem('Filter absent only 👎', 'filterAbsentOnly')
     .addSeparator()
     .addSubMenu(
-      ui.createMenu('Step by step demo 👣')
-        .addItem('1 - Reset sheet', 'Demo.step1ResetSheet')
-        .addItem('2 - Paste Pairing CSV', 'Demo.step2PastePairingCsvData')
-        .addItem('3 - Format CSV', 'Demo.step3FormatCsv')
-        .addItem('4 - Register participants', 'Demo.step4RegisterParticipants')
-        .addItem('5 - Sort participants', 'Demo.step5SortParticipants')
-        .addItem('6 - Assign coaches to groups', 'Demo.step6AssignCoachesToGroups')
-        .addItem('7 - Sort participants', 'Demo.step7SortParticipants')
-        .addItem('8 - Assign coaches to students', 'Demo.step8AssignCoachesToStudents')
-        .addItem('9 - Show pairings', 'Demo.step9ShowPairings')
+      ui.createMenu('Tutorial 👣')
+        .addItem('1 - Reset sheet', 'Tutorial.step1ResetSheet')
+        .addItem('2 - Paste Pairing CSV', 'Tutorial.step2PastePairingCsvData')
+        .addItem('3 - Format CSV', 'Tutorial.step3FormatCsv')
+        .addItem('4 - Register participants', 'Tutorial.step4RegisterParticipants')
+        .addItem('5 - Sort participants', 'Tutorial.step5SortParticipants')
+        .addItem('6 - Assign coaches to groups', 'Tutorial.step6AssignCoachesToGroups')
+        .addItem('7 - Sort participants', 'Tutorial.step7SortParticipants')
+        .addItem('8 - Assign coaches to students', 'Tutorial.step8AssignCoachesToStudents')
+        .addItem('9 - Show pairings', 'Tutorial.step9ShowPairings')
     )
     .addItem('Help 🛟', 'showHelp')
     .addToUi();
 
     // reset();
-    // Demo.pasteSamplePairingCsvData();
+    // Tutorial.pasteSamplePairingCsvData();
     // formatCsv();
 }
 
