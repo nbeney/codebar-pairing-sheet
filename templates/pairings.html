@@ -174,7 +174,11 @@
               </tr>
             </thead>
             <tbody>
-              <? for (const group in pairings) { ?>
+              <? 
+                // Sort groups alphabetically
+                const sortedGroups = Object.keys(pairings).sort((a, b) => a.localeCompare(b));
+                for (const group of sortedGroups) { 
+              ?>
                 <!-- Group header row -->
                 <tr class="group-header" style="background-color: <?
                   const groupObj = GROUPS.find(g => g.name === group);
@@ -182,7 +186,13 @@
                 ?><?= bgColor ?>;">
                   <td colspan="2"><?= group ?></td>
                 </tr>
-                <? for (const entry of pairings[group]) { ?>
+                <? 
+                  // Sort entries by coach name
+                  const sortedEntries = pairings[group].slice().sort((a, b) => 
+                    a.coach.localeCompare(b.coach)
+                  );
+                  for (const entry of sortedEntries) { 
+                ?>
                   <tr>
                     <td class="coach-cell"><span class="emoji"><?= ICONS.coach ?></span><?= entry.coach ?></td>
                     <td class="student-cell">
