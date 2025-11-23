@@ -78,6 +78,8 @@ class Group {
   }
 }
 
+const GROUP_TBD = new Group("TBD", "#e8e8e8", []);
+
 const GROUPS = [
   new Group("Beginner", "#ffd6e8", [
     "I don't know, I'm a complete beginner.",
@@ -112,7 +114,7 @@ const GROUPS = [
   new Group("React", "#b2e8f0", [
     'React Project',
   ]),
-  new Group("Unknown", "#e8e8e8", []),
+  GROUP_TBD,
 ];
 
 const TUTORIAL_GROUP_MAP = {};

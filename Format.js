@@ -237,7 +237,7 @@ class Format {
       ];
 
       for (const { range, groupColIndex: colIndex } of columnRanges) {
-        const cond = group.name === 'Unknown' ? '<>""' : `="${group.name}"`;
+        const cond = group.name === GROUP_TBD.name ? '<>""' : `="${group.name}"`;
         const formula = `=$${String.fromCharCode(65 + colIndex)}2${cond}`;
         const rule = SpreadsheetApp.newConditionalFormatRule()
           .whenFormulaSatisfied(formula)
@@ -262,7 +262,7 @@ class Format {
 
     for (let i = 1; i < data.length; i++) {
       if (data[i][roleColIndex] === ROLE_COACH) {
-          data[i][groupColIndex] = 'Unknown';
+          data[i][groupColIndex] = GROUP_TBD.name;
       } else if (data[i][roleColIndex] === ROLE_STUDENT) {
         const skillsTutorial = data[i][skillsTutorialColIndex].toString();
         const group = TUTORIAL_GROUP_MAP[skillsTutorial];

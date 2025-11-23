@@ -220,7 +220,7 @@ class Tutorial {
             [
                 'In a real workshop, you would manually assign coaches to appropriate tutorial groups.',
                 '',
-                'For this demo, coaches will remain in the "Unknown" group (highlighted in light red).',
+                `For this demo, coaches will remain in the "${GROUP_TBD.name}" group (highlighted in light red).`,
                 '',
                 'Proceed to next step?'
             ],
