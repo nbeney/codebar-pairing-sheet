@@ -20,22 +20,16 @@ function onOpen() {
     .addSeparator()
     .addSubMenu(
       ui.createMenu('Step by step demo 👣')
-        .addItem('1 - Reset sheet', 'MENU_FUNCTION_DUMMY')
-        .addItem('2 - Paste Pairing CSV', 'MENU_FUNCTION_DUMMY')
-        .addItem('3 - Format CSV', 'MENU_FUNCTION_DUMMY')
-        .addItem('4 - Register participants', 'MENU_FUNCTION_DUMMY')
-        .addItem('5 - Sort participants', 'MENU_FUNCTION_DUMMY')
-        .addItem('6 - Assign coaches to groups', 'MENU_FUNCTION_DUMMY')
-        .addItem('7 - Assign coaches to students', 'MENU_FUNCTION_DUMMY')
-        .addItem('8 - Show pairings', 'MENU_FUNCTION_DUMMY')
-        .addSeparator()
-        .addItem('Automatic 🎬', 'MENU_FUNCTION_DUMMY')
-        .addSeparator()
-        .addItem('Paste sample Pairing CSV data 📚', 'Demo.pasteSamplePairingCsvData')
-        .addItem('Register randomly 📚', 'Demo.registerAtRandom')
-        .addItem('Pair randomly 📚', 'Demo.pairAtRandom')
+        .addItem('1 - Reset sheet', 'Demo.step1ResetSheet')
+        .addItem('2 - Paste Pairing CSV', 'Demo.step2PastePairingCsvData')
+        .addItem('3 - Format CSV', 'Demo.step3FormatCsv')
+        .addItem('4 - Register participants', 'Demo.step4RegisterParticipants')
+        .addItem('5 - Sort participants', 'Demo.step5SortParticipants')
+        .addItem('6 - Assign coaches to groups', 'Demo.step6AssignCoachesToGroups')
+        .addItem('7 - Sort participants', 'Demo.step7SortParticipants')
+        .addItem('8 - Assign coaches to students', 'Demo.step8AssignCoachesToStudents')
+        .addItem('9 - Show pairings', 'Demo.step9ShowPairings')
     )
-    .addSeparator()
     .addItem('Help 🛟', 'showHelp')
     .addToUi();
 
@@ -43,8 +37,6 @@ function onOpen() {
     // Demo.pasteSamplePairingCsvData();
     // formatCsv();
 }
-
-function MENU_FUNCTION_DUMMY() {}
 
 function reset() {
   if (!Utils.askConfirmation('❌ Warning', 'This will clear the whole sheet. Do you want to continue?')) {

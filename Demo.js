@@ -134,4 +134,142 @@ class Demo {
 
         Utils.showInfo(`Successfully paired ${pairedCount} students with coaches!`);
     }
+
+    static step1ResetSheet() {
+        const ui = SpreadsheetApp.getUi();
+        const result = ui.alert(
+            '👣 Step 1: Reset Sheet',
+            'This will clear the entire sheet and prepare it for new data.\n\nProceed with reset?',
+            ui.ButtonSet.OK_CANCEL
+        );
+        
+        if (result === ui.Button.OK) {
+            reset();
+            SpreadsheetApp.flush();
+            Demo.step2PastePairingCsvData();
+        }
+    }
+
+    static step2PastePairingCsvData() {
+        const ui = SpreadsheetApp.getUi();
+        const result = ui.alert(
+            '👣 Step 2: Paste Pairing CSV Data',
+            'This will paste sample workshop registration data into the sheet.\n\nProceed with pasting data?',
+            ui.ButtonSet.OK_CANCEL
+        );
+        
+        if (result === ui.Button.OK) {
+            Demo.pasteSamplePairingCsvData();
+            SpreadsheetApp.flush();
+            Demo.step3FormatCsv();
+        }
+    }
+
+    static step3FormatCsv() {
+        const ui = SpreadsheetApp.getUi();
+        const result = ui.alert(
+            '👣 Step 3: Format CSV Data',
+            'This will format the raw CSV data by:\n• Splitting into columns\n• Adding icons for roles\n• Creating group assignments\n• Adding checkboxes for registration\n\nProceed with formatting?',
+            ui.ButtonSet.OK_CANCEL
+        );
+        
+        if (result === ui.Button.OK) {
+            formatCsv();
+            SpreadsheetApp.flush();
+            Demo.step4RegisterParticipants();
+        }
+    }
+
+    static step4RegisterParticipants() {
+        const ui = SpreadsheetApp.getUi();
+        const result = ui.alert(
+            '👣 Step 4: Register Participants',
+            'This will randomly check participants as "present" for the workshop (about 70% attendance rate).\n\nProceed with registration?',
+            ui.ButtonSet.OK_CANCEL
+        );
+        
+        if (result === ui.Button.OK) {
+            Demo.registerAtRandom();
+            SpreadsheetApp.flush();
+            Demo.step5SortParticipants();
+        }
+    }
+
+    static step5SortParticipants() {
+        const ui = SpreadsheetApp.getUi();
+        const result = ui.alert(
+            '👣 Step 5: Sort Participants',
+            'This will sort participants by Group > Role > Name to make pairing easier.\n\nProceed with sorting?',
+            ui.ButtonSet.OK_CANCEL
+        );
+        
+        if (result === ui.Button.OK) {
+            sortByGroupRoleName();
+            SpreadsheetApp.flush();
+            Demo.step6AssignCoachesToGroups();
+        }
+    }
+
+    static step6AssignCoachesToGroups() {
+        const ui = SpreadsheetApp.getUi();
+        const result = ui.alert(
+            '👣 Step 6: Assign Coaches to Groups',
+            'In a real workshop, you would manually assign coaches to appropriate tutorial groups.\n\nFor this demo, coaches will remain in the "Unknown" group (highlighted in light red).\n\nProceed to next step?',
+            ui.ButtonSet.OK_CANCEL
+        );
+        
+        if (result === ui.Button.OK) {
+            SpreadsheetApp.flush();
+            Demo.step7SortParticipants();
+        }
+    }
+
+    static step7SortParticipants() {
+        const ui = SpreadsheetApp.getUi();
+        const result = ui.alert(
+            '👣 Step 7: Sort Participants',
+            'This will sort participants by Group > Role > Name to make pairing easier.\n\nProceed with sorting?',
+            ui.ButtonSet.OK_CANCEL
+        );
+        
+        if (result === ui.Button.OK) {
+            sortByGroupRoleName();
+            SpreadsheetApp.flush();
+            Demo.step8AssignCoachesToStudents();
+        }
+    }
+
+    static step8AssignCoachesToStudents() {
+        const ui = SpreadsheetApp.getUi();
+        const result = ui.alert(
+            '👣 Step 8: Assign Coaches to Students',
+            'This will randomly pair registered coaches with registered students.\n\nProceed with pairing?',
+            ui.ButtonSet.OK_CANCEL
+        );
+        
+        if (result === ui.Button.OK) {
+            Demo.pairAtRandom();
+            SpreadsheetApp.flush();
+            Demo.step9ShowPairings();
+        }
+    }
+
+    static step9ShowPairings() {
+        const ui = SpreadsheetApp.getUi();
+        const result = ui.alert(
+            '👣 Step 9: Show Pairings',
+            'This will display a summary of all pairings, unpaired participants, and missing participants.\n\nProceed to show pairings?',
+            ui.ButtonSet.OK_CANCEL
+        );
+        
+        if (result === ui.Button.OK) {
+            showPairings();
+            ui.alert(
+                '👣 Demo Complete!',
+                'The step-by-step demo is now complete. You can explore the pairings dialog and try other features.',
+                ui.ButtonSet.OK
+            );
+        }
+    }
+
 }
