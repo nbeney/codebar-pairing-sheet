@@ -136,140 +136,162 @@ class Demo {
     }
 
     static step1ResetSheet() {
-        const ui = SpreadsheetApp.getUi();
-        const result = ui.alert(
-            '👣 Step 1: Reset Sheet',
-            'This will clear the entire sheet and prepare it for new data.\n\nProceed with reset?',
-            ui.ButtonSet.OK_CANCEL
+        Demo.showStep(
+            'Step 1: Reset Sheet',
+            [
+                'This will clear the entire sheet and prepare it for new data.',
+                '',
+                'Proceed with reset?'
+            ],
+            () => {
+                reset();
+                Demo.step2PastePairingCsvData();
+            }
         );
-        
-        if (result === ui.Button.OK) {
-            reset();
-            SpreadsheetApp.flush();
-            Demo.step2PastePairingCsvData();
-        }
     }
 
     static step2PastePairingCsvData() {
-        const ui = SpreadsheetApp.getUi();
-        const result = ui.alert(
-            '👣 Step 2: Paste Pairing CSV Data',
-            'This will paste sample workshop registration data into the sheet.\n\nProceed with pasting data?',
-            ui.ButtonSet.OK_CANCEL
+        Demo.showStep(
+            'Step 2: Paste Pairing CSV Data',
+            [
+                'This will paste sample workshop registration data into the sheet.',
+                '',
+                'Proceed with pasting data?'
+            ],
+            () => {
+                Demo.pasteSamplePairingCsvData();
+                Demo.step3FormatCsv();
+            }
         );
-        
-        if (result === ui.Button.OK) {
-            Demo.pasteSamplePairingCsvData();
-            SpreadsheetApp.flush();
-            Demo.step3FormatCsv();
-        }
     }
 
     static step3FormatCsv() {
-        const ui = SpreadsheetApp.getUi();
-        const result = ui.alert(
-            '👣 Step 3: Format CSV Data',
-            'This will format the raw CSV data by:\n• Splitting into columns\n• Adding icons for roles\n• Creating group assignments\n• Adding checkboxes for registration\n\nProceed with formatting?',
-            ui.ButtonSet.OK_CANCEL
+        Demo.showStep(
+            'Step 3: Format CSV Data',
+            [
+                'This will format the raw CSV data by:',
+                '• Splitting into columns',
+                '• Adding icons for roles',
+                '• Creating group assignments',
+                '• Adding checkboxes for registration',
+                '',
+                'Proceed with formatting?'
+            ],
+            () => {
+                formatCsv();
+                Demo.step4RegisterParticipants();
+            }
         );
-        
-        if (result === ui.Button.OK) {
-            formatCsv();
-            SpreadsheetApp.flush();
-            Demo.step4RegisterParticipants();
-        }
     }
 
     static step4RegisterParticipants() {
-        const ui = SpreadsheetApp.getUi();
-        const result = ui.alert(
-            '👣 Step 4: Register Participants',
-            'This will randomly check participants as "present" for the workshop (about 70% attendance rate).\n\nProceed with registration?',
-            ui.ButtonSet.OK_CANCEL
+        Demo.showStep(
+            'Step 4: Register Participants',
+            [
+                'This will randomly check participants as "present" for the workshop (about 70% attendance rate).',
+                '',
+                'Proceed with registration?'
+            ],
+            () => {
+                Demo.registerAtRandom();
+                Demo.step5SortParticipants();
+            }
         );
-        
-        if (result === ui.Button.OK) {
-            Demo.registerAtRandom();
-            SpreadsheetApp.flush();
-            Demo.step5SortParticipants();
-        }
     }
 
     static step5SortParticipants() {
-        const ui = SpreadsheetApp.getUi();
-        const result = ui.alert(
-            '👣 Step 5: Sort Participants',
-            'This will sort participants by Group > Role > Name to make pairing easier.\n\nProceed with sorting?',
-            ui.ButtonSet.OK_CANCEL
+        Demo.showStep(
+            'Step 5: Sort Participants',
+            [
+                'This will sort participants by Group > Role > Name to make pairing easier.',
+                '',
+                'Proceed with sorting?'
+            ],
+            () => {
+                sortByGroupRoleName();
+                Demo.step6AssignCoachesToGroups();
+            }
         );
-        
-        if (result === ui.Button.OK) {
-            sortByGroupRoleName();
-            SpreadsheetApp.flush();
-            Demo.step6AssignCoachesToGroups();
-        }
     }
 
     static step6AssignCoachesToGroups() {
-        const ui = SpreadsheetApp.getUi();
-        const result = ui.alert(
-            '👣 Step 6: Assign Coaches to Groups',
-            'In a real workshop, you would manually assign coaches to appropriate tutorial groups.\n\nFor this demo, coaches will remain in the "Unknown" group (highlighted in light red).\n\nProceed to next step?',
-            ui.ButtonSet.OK_CANCEL
+        Demo.showStep(
+            'Step 6: Assign Coaches to Groups',
+            [
+                'In a real workshop, you would manually assign coaches to appropriate tutorial groups.',
+                '',
+                'For this demo, coaches will remain in the "Unknown" group (highlighted in light red).',
+                '',
+                'Proceed to next step?'
+            ],
+            () => {
+                Demo.step7SortParticipants();
+            }
         );
-        
-        if (result === ui.Button.OK) {
-            SpreadsheetApp.flush();
-            Demo.step7SortParticipants();
-        }
     }
 
     static step7SortParticipants() {
-        const ui = SpreadsheetApp.getUi();
-        const result = ui.alert(
-            '👣 Step 7: Sort Participants',
-            'This will sort participants by Group > Role > Name to make pairing easier.\n\nProceed with sorting?',
-            ui.ButtonSet.OK_CANCEL
+        Demo.showStep(
+            'Step 7: Sort Participants',
+            [
+                'This will sort participants by Role > Group > Name to optimize pairing workflow.',
+                '',
+                'Proceed with sorting?'
+            ],
+            () => {
+                sortByRoleGroupName();
+                Demo.step8AssignCoachesToStudents();
+            }
         );
-        
-        if (result === ui.Button.OK) {
-            sortByGroupRoleName();
-            SpreadsheetApp.flush();
-            Demo.step8AssignCoachesToStudents();
-        }
     }
 
     static step8AssignCoachesToStudents() {
-        const ui = SpreadsheetApp.getUi();
-        const result = ui.alert(
-            '👣 Step 8: Assign Coaches to Students',
-            'This will randomly pair registered coaches with registered students.\n\nProceed with pairing?',
-            ui.ButtonSet.OK_CANCEL
+        Demo.showStep(
+            'Step 8: Assign Coaches to Students',
+            [
+                'This will randomly pair registered coaches with registered students.',
+                '',
+                'Proceed with pairing?'
+            ],
+            () => {
+                Demo.pairAtRandom();
+                Demo.step9ShowPairings();
+            }
         );
-        
-        if (result === ui.Button.OK) {
-            Demo.pairAtRandom();
-            SpreadsheetApp.flush();
-            Demo.step9ShowPairings();
-        }
     }
 
     static step9ShowPairings() {
-        const ui = SpreadsheetApp.getUi();
-        const result = ui.alert(
-            '👣 Step 9: Show Pairings',
-            'This will display a summary of all pairings, unpaired participants, and missing participants.\n\nProceed to show pairings?',
-            ui.ButtonSet.OK_CANCEL
+        Demo.showStep(
+            'Step 9: Show Pairings',
+            [
+                'This will display a summary of all pairings, unpaired participants, and missing participants.',
+                '',
+                'Proceed to show pairings?'
+            ],
+            () => {
+                showPairings();
+                const ui = SpreadsheetApp.getUi();
+                ui.alert(
+                    '👣 Demo Complete!',
+                    'The step-by-step demo is now complete. You can explore the pairings dialog and try other features.',
+                    ui.ButtonSet.OK
+                );
+            }
         );
-        
-        if (result === ui.Button.OK) {
-            showPairings();
-            ui.alert(
-                '👣 Demo Complete!',
-                'The step-by-step demo is now complete. You can explore the pairings dialog and try other features.',
-                ui.ButtonSet.OK
-            );
-        }
     }
 
+    static showStep(title, lines, okCallback) {
+        SpreadsheetApp.flush();
+        const ui = SpreadsheetApp.getUi();
+        const message = lines.join('\n');
+        const result = ui.alert(
+            '👣 ' + title,
+            message,
+            ui.ButtonSet.OK_CANCEL
+        );
+
+        if (result === ui.Button.OK) {
+            okCallback();
+        }
+    }
 }
