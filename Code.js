@@ -73,9 +73,9 @@ function formatCsv() {
     Format.normalizeTechnologies('Note', SKILLS_MAP);
     Format.copySkillsForCoaches();
     Format.deleteSkillsAndRenameTutorialColumn();
-    Format.insertCheckboxColumn();
+    Format.insertRegisteredColumn();
     Format.insertGroupColumn();
-    Format.setGroupForStudentsAndAddValidation();
+    Format.setGroupForCoachesAndStudents();
     Format.sortAttendees();
     Format.freezeTopRow();
     Format.formatHeaderRow();

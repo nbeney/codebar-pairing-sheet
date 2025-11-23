@@ -184,7 +184,7 @@ class Format {
     }
   }
 
-  static insertCheckboxColumn() {
+  static insertRegisteredColumn() {
     const sheet = SpreadsheetApp.getActiveSheet();
     const data = sheet.getDataRange().getValues();
     const nameColIndex = data[0].indexOf('Name');
@@ -207,36 +207,16 @@ class Format {
     const sheet = SpreadsheetApp.getActiveSheet();
     const data = sheet.getDataRange().getValues();
     const roleColIndex = data[0].indexOf('Role');
+    const groupColIndex = roleColIndex + 1;
 
-    if (roleColIndex !== -1) {
-      sheet.insertColumnAfter(roleColIndex + 1);
-      sheet.getRange(1, roleColIndex + 2).setValue('Group');
-    }
-  }
+    if (roleColIndex === -1) return;
 
-  static setGroupForStudentsAndAddValidation() {
-    const sheet = SpreadsheetApp.getActiveSheet();
-    const data = sheet.getDataRange().getValues();
-    const roleColIndex = data[0].indexOf('Role');
-    const groupColIndex = data[0].indexOf('Group');
-    const skillsTutorialColIndex = data[0].indexOf('Skills/Tutorial');
+    // Insert the column
 
-    if (roleColIndex === -1 || groupColIndex === -1) return;
+    sheet.insertColumnAfter(roleColIndex + 1);
+    sheet.getRange(1, roleColIndex + 2).setValue('Group');
 
-    // Data part
-
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][roleColIndex] === ROLE_STUDENT) {
-        const skillsTutorial = data[i][skillsTutorialColIndex].toString();
-        const group = TUTORIAL_GROUP_MAP[skillsTutorial];
-        if (group !== undefined) {
-          data[i][groupColIndex] = group.name;
-        }
-      }
-    }
-    sheet.getDataRange().setValues(data);
-
-    // Validation part
+    // Add the data validation
 
     const groups = GROUPS.map(g => g.name);
     const val = SpreadsheetApp.newDataValidation()
@@ -245,30 +225,51 @@ class Format {
       .build();
     sheet.getRange(2, groupColIndex + 1, sheet.getLastRow() - 1).setDataValidation(val);
 
-    // Conditional formatting part
+    // Add the conditional formatting
 
     const rules = sheet.getConditionalFormatRules();
 
     for (const group of GROUPS) {
-      // For cols A to NUM_COLS
-      const rule = SpreadsheetApp.newConditionalFormatRule()
-        .whenFormulaSatisfied(`=$${String.fromCharCode(65 + groupColIndex)}2="${group.name}"`)
-        .setBackground(group.color)
-        .setFontColor('#000000')
-        .setRanges([sheet.getRange(2,1, sheet.getLastRow() - 1, NUM_COLS)])
-        .build();
-      rules.push(rule);
-
-      // For cols NUM_COLS+1 to 2*NUM_COLS
-      const rule2 = SpreadsheetApp.newConditionalFormatRule()
-        .whenFormulaSatisfied(`=$${String.fromCharCode(65 + groupColIndex + NUM_COLS)}2="${group.name}"`)
-        .setBackground(group.color)
-        .setFontColor('#000000')
-        .setRanges([sheet.getRange(2,NUM_COLS + 1, sheet.getLastRow() - 1, NUM_COLS)])
-        .build();
-      rules.push(rule2);
+      // Create rules for both column ranges
+      const columnRanges = [
+        { range: sheet.getRange(2, 1, sheet.getLastRow() - 1, NUM_COLS), groupColIndex: groupColIndex },
+        { range: sheet.getRange(2, NUM_COLS + 1, sheet.getLastRow() - 1, NUM_COLS), groupColIndex: groupColIndex + NUM_COLS }
+      ];
+      
+      for (const { range, groupColIndex: colIndex } of columnRanges) {
+        const rule = SpreadsheetApp.newConditionalFormatRule()
+          .whenFormulaSatisfied(`=$${String.fromCharCode(65 + colIndex)}2="${group.name}"`)
+          .setBackground(group.color)
+          .setFontColor('#000000')
+          .setRanges([range])
+          .build();
+        rules.push(rule);
+      }
     }
     sheet.setConditionalFormatRules(rules);
+  }
+
+  static setGroupForCoachesAndStudents() {
+    const sheet = SpreadsheetApp.getActiveSheet();
+    const data = sheet.getDataRange().getValues();
+    const roleColIndex = data[0].indexOf('Role');
+    const groupColIndex = data[0].indexOf('Group');
+    const skillsTutorialColIndex = data[0].indexOf('Skills/Tutorial');
+
+    if (roleColIndex === -1 || groupColIndex === -1) return;
+
+    for (let i = 1; i < data.length; i++) {
+      if (data[i][roleColIndex] === ROLE_COACH) {
+          data[i][groupColIndex] = 'Unknown';
+      } else if (data[i][roleColIndex] === ROLE_STUDENT) {
+        const skillsTutorial = data[i][skillsTutorialColIndex].toString();
+        const group = TUTORIAL_GROUP_MAP[skillsTutorial];
+        if (group !== undefined) {
+          data[i][groupColIndex] = group.name;
+        }
+      }
+    }
+    sheet.getDataRange().setValues(data);
   }
 
   static sortAttendees() {
