@@ -19,7 +19,18 @@ function onOpen() {
     .addItem('Filter absent only 👎', 'filterAbsentOnly')
     .addSeparator()
     .addSubMenu(
-      ui.createMenu('Demo/Testing 🧪')
+      ui.createMenu('Step by step demo 👣')
+        .addItem('1 - Reset sheet', 'MENU_FUNCTION_DUMMY')
+        .addItem('2 - Paste Pairing CSV', 'MENU_FUNCTION_DUMMY')
+        .addItem('3 - Format CSV', 'MENU_FUNCTION_DUMMY')
+        .addItem('4 - Register participants', 'MENU_FUNCTION_DUMMY')
+        .addItem('5 - Sort participants', 'MENU_FUNCTION_DUMMY')
+        .addItem('6 - Assign coaches to groups', 'MENU_FUNCTION_DUMMY')
+        .addItem('7 - Assign coaches to students', 'MENU_FUNCTION_DUMMY')
+        .addItem('8 - Show pairings', 'MENU_FUNCTION_DUMMY')
+        .addSeparator()
+        .addItem('Automatic 🎬', 'MENU_FUNCTION_DUMMY')
+        .addSeparator()
         .addItem('Paste sample Pairing CSV data 📚', 'Demo.pasteSamplePairingCsvData')
         .addItem('Register randomly 📚', 'Demo.registerAtRandom')
         .addItem('Pair randomly 📚', 'Demo.pairAtRandom')
@@ -28,10 +39,12 @@ function onOpen() {
     .addItem('Help 🛟', 'showHelp')
     .addToUi();
 
-    reset();
-    Demo.pasteSamplePairingCsvData();
-    formatCsv();
+    // reset();
+    // Demo.pasteSamplePairingCsvData();
+    // formatCsv();
 }
+
+function MENU_FUNCTION_DUMMY() {}
 
 function reset() {
   if (!Utils.askConfirmation('❌ Warning', 'This will clear the whole sheet. Do you want to continue?')) {
