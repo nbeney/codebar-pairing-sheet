@@ -8,7 +8,6 @@ function onOpen() {
     .addItem('Assign coach to student ➕', 'assignSelectedCoachToStudent')
     .addSeparator()
     .addItem('Show pairings ↹', 'showPairings')
-    .addItem('Show numbers 🔢', 'showNumbers')
     .addSeparator()
     .addItem('Sort by name', 'sortByName')
     .addItem('Sort by role/name', 'sortByRoleName')
@@ -167,11 +166,6 @@ function showPairings() {
     .setHeight(600);
 
   ui.showModalDialog(htmlOutput, 'Pairings');
-}
-
-// This macro should be imported and assigned to Ctrl-Alt-Shift 5
-function showNumbers() {
-  Utils.showInfo('Not yet implemented!');
 }
 
 // This macro should be imported and assigned to Ctrl-Alt-Shift 3

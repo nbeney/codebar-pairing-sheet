@@ -49,10 +49,6 @@
       "menuName": "showPairings",
       "functionName": "showPairings",
       "defaultShortcut": "Ctrl+Alt+Shift+4"
-    }, {
-      "menuName": "showNumbers",
-      "functionName": "showNumbers",
-      "defaultShortcut": "Ctrl+Alt+Shift+5"
     }]
   }
 }
