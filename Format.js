@@ -322,14 +322,15 @@ class Format {
       }
     }
 
-    // Make columns 7-10 the same width as columns 1-4
-    // Make columns 11-12 150 pixels wide
-    for (let i = 0; i < 4; i++) {
-      const sourceWidth = sheet.getColumnWidth(i + 1);
-      sheet.setColumnWidth(i + 7, sourceWidth);
+    // Make columns 5 and 6 narrow enough to fit on laptop screens
+    sheet.setColumnWidth(5, 300);
+    sheet.setColumnWidth(6, 300);
+
+    // Make columns 7-12 the same width as columns 1-6
+    for (let i = 1; i <= NUM_COLS; i++) {
+      const sourceWidth = sheet.getColumnWidth(i);
+      sheet.setColumnWidth(i + NUM_COLS, sourceWidth);
     }
-    sheet.setColumnWidth(11, 150);
-    sheet.setColumnWidth(12, 150);
   }
 
   static clipColumns() {
