@@ -35,104 +35,101 @@ class Tutorial {
         range.setValues(DEMO_CSV_DATA);
     }
 
-    static registerAtRandom() {
+    static doRegisterParticipants() {
         const sheet = SpreadsheetApp.getActiveSheet();
         const data = sheet.getDataRange().getValues();
 
+        const namesToSkip = new Set([
+            'Isaac Incredible [H]',
+            'Sophie Sparkling [S]',
+            'Willow Wonderful',
+        ]);
+        
         for (let i = 1; i < data.length; i++) {
-            const isRegistered = Math.random() < 0.7; // 70% chance of being registered
-            data[i][0] = isRegistered ? 'TRUE' : 'FALSE';
+            const name = data[i][COL_NAME_1 - 1];
+            data[i][COL_REGISTERED_1 - 1] = !namesToSkip.has(name);
         }
 
         sheet.getRange(1, 1, data.length, data[0].length).setValues(data);
     }
 
-    static pairAtRandom() {
+   static doAssignCoachesToGroups() {
         const sheet = SpreadsheetApp.getActiveSheet();
-        let data = sheet.getDataRange().getValues();
+        const data = sheet.getDataRange().getValues();
 
-        // Collect registered coaches and students that aren't already paired
-        const availableCoaches = [];
-        const availableStudents = [];
+        const coachGroupMap = {
+            'Diana Delightful': 'Python',
+            'Ethan Excellent [H]': 'Python',
+            'Fiona Fabulous': 'React',
+            'Hannah Happy [H/S]': 'Python',
+            'Kevin Kind [H]': 'Other',
+            'Luna Lovely [S]': 'Python',
+            'Marcus Magnificent [H]': 'Java',
+            'Oliver Optimistic [H]': 'Beginner',
+            'Petra Playful [S]': 'Other',
+            'Rosa Radiant': 'React',
+            'Xander Xtraordinary [H]': 'React',
+        };
 
         for (let i = 1; i < data.length; i++) {
-            const reg1 = data[i][COL_REGISTERED_1 - 1];
-            const name1 = data[i][COL_NAME_1 - 1];
-            const role1 = data[i][COL_ROLE_1 - 1];
-            const reg2 = data[i][COL_REGISTERED_2 - 1];
-            const name2 = data[i][COL_NAME_2 - 1];
+            const name = data[i][COL_NAME_1 - 1];
+            if (coachGroupMap[name]) {
+                data[i][COL_GROUP_1 - 1] = coachGroupMap[name];
+            }
+        }
 
-            // Check if left side is registered and right side is empty
-            const leftRegistered = reg1 === 'TRUE' || reg1 === true;
-            const rightEmpty = !reg2 || reg2 === 'FALSE' || reg2 === false || name2 === '' || name2 === '-';
+        sheet.getRange(1, 1, data.length, data[0].length).setValues(data);
+    }
 
-            if (leftRegistered && rightEmpty && name1 && name1 !== '-') {
-                if (role1 === ROLE_COACH) {
-                    availableCoaches.push(i);
-                } else if (role1 === ROLE_STUDENT) {
-                    availableStudents.push(i);
+    static doAssignCoachesToStudents() {
+        const sheet = SpreadsheetApp.getActiveSheet();
+        const data = sheet.getDataRange().getValues();
+        
+        const studentToCoachMap = {
+            // Student: Coach
+            'Adrian Awesome [H]': 'Kevin Kind [H]',
+            'Bella Bright [S]': 'Rosa Radiant',
+            'Carl Cheerful [H]': 'Diana Delightful',
+            'Gabriel Giggly [H]': 'Rosa Radiant',
+            'Jessica Jolly': 'Marcus Magnificent [H]',
+            'Nina Nimble [S]': 'Ethan Excellent [H]',
+            'Quinn Quirky [H]': 'Xander Xtraordinary [H]',
+            'Tyler Terrific [H]': 'Hannah Happy [H/S]',
+            'Uma Unstoppable [S] 🐥': 'Oliver Optimistic [H]',
+            'Victor Vibrant [H]': 'Oliver Optimistic [H]',
+            'Yvonne Youthful': 'Marcus Magnificent [H]',
+        };
+
+        // Copy coach data to student rows
+        for (let i = 1; i < data.length; i++) {
+            const studentName = data[i][COL_NAME_1 - 1];
+            const coachName = studentToCoachMap[studentName];
+            if (coachName) {
+                // Find the coach row
+                for (let j = 1; j < data.length; j++) {
+                    if (data[j][COL_NAME_1 - 1] === coachName) {
+                        // Copy coach data to student columns
+                        for (let col = 0; col < NUM_COLS; col++) {
+                            data[i][COL_REGISTERED_2 - 1 + col] = data[j][COL_REGISTERED_1 - 1 + col];
+                        }
+                        break;
+                    }
                 }
             }
         }
 
-        if (availableCoaches.length === 0) {
-            Utils.showInfo('No available coaches found for pairing.');
-            return;
-        }
-
-        if (availableStudents.length === 0) {
-            Utils.showInfo('No available students found for pairing.');
-            return;
-        }
-
-        const coachAssignments = {};
-        let pairedCount = 0;
-
-        // Shuffle students for random pairing
-        const shuffledStudents = [...availableStudents].sort(() => Math.random() - 0.5);
-
-        for (const studentRowIdx of shuffledStudents) {
-            if (availableCoaches.length === 0) {
-                break;
-            }
-
-            // Find coaches that haven't reached their limit (2 students max)
-            const availableCoachesForPairing = availableCoaches.filter(coachRowIdx => {
-                return (coachAssignments[coachRowIdx] || 0) < 2;
-            });
-
-            if (availableCoachesForPairing.length === 0) {
-                break; // No more coaches available
-            }
-
-            // Pick a random coach from available ones
-            const randomCoachIdx = Math.floor(Math.random() * availableCoachesForPairing.length);
-            const coachRowIdx = availableCoachesForPairing[randomCoachIdx];
-
-            // Move coach data to student's right side
-            const sourceRange = sheet.getRange(coachRowIdx + 1, COL_REGISTERED_1, 1, NUM_COLS);
-            const targetRange = sheet.getRange(studentRowIdx + 1, COL_REGISTERED_2, 1, NUM_COLS);
-
-            // Copy data instead of moving to preserve source for multiple assignments
-            sourceRange.copyTo(targetRange, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
-
-            // // Color the target range as coach color
-            // targetRange.setBackground(COLOR_COACH);
-
-            // Track assignments
-            coachAssignments[coachRowIdx] = (coachAssignments[coachRowIdx] || 0) + 1;
-            pairedCount++;
-
-            // If coach has reached limit, remove from available list
-            if (coachAssignments[coachRowIdx] >= 2) {
-                const indexToRemove = availableCoaches.indexOf(coachRowIdx);
-                if (indexToRemove > -1) {
-                    availableCoaches.splice(indexToRemove, 1);
+        // Clear unneeded coach rows, columns 1-6 if role is Coach and name is in the map
+        for (let i = 1; i < data.length; i++) {
+            const name = data[i][COL_NAME_1 - 1];
+            const role = data[i][COL_ROLE_1 - 1];
+            if (role === ROLE_COACH && Object.values(studentToCoachMap).includes(name)) {
+                for (let col = 0; col < NUM_COLS; col++) {
+                    data[i][col] = '';
                 }
             }
         }
 
-        Utils.showInfo(`Successfully paired ${pairedCount} students with coaches!`);
+        sheet.getRange(1, 1, data.length, data[0].length).setValues(data);
     }
 
     static step1ResetSheet() {
@@ -193,7 +190,7 @@ class Tutorial {
                 'Proceed with registration?'
             ],
             () => {
-                Tutorial.registerAtRandom();
+                Tutorial.doRegisterParticipants();
                 Tutorial.step5SortParticipants();
             }
         );
@@ -225,6 +222,7 @@ class Tutorial {
                 'Proceed to next step?'
             ],
             () => {
+                Tutorial.doAssignCoachesToGroups();
                 Tutorial.step7SortParticipants();
             }
         );
@@ -234,12 +232,12 @@ class Tutorial {
         Tutorial.showStep(
             'Step 7: Sort Participants',
             [
-                'This will sort participants by Role > Group > Name to optimize pairing workflow.',
+                'This will sort participants by Group > Role > Name to optimize pairing workflow.',
                 '',
                 'Proceed with sorting?'
             ],
             () => {
-                sortByRoleGroupName();
+                sortByGroupRoleName();
                 Tutorial.step8AssignCoachesToStudents();
             }
         );
@@ -254,7 +252,7 @@ class Tutorial {
                 'Proceed with pairing?'
             ],
             () => {
-                Tutorial.pairAtRandom();
+                Tutorial.doAssignCoachesToStudents();
                 Tutorial.step9ShowPairings();
             }
         );
