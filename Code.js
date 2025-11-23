@@ -146,7 +146,7 @@ function assignSelectedCoachToStudent() {
 
 // This macro should be imported and assigned to Ctrl-Alt-Shift 4
 function showPairings() {
-  const { pairings, unpairedCoaches, unpairedStudents } = collectPairings();
+  const { pairings, unpairedCoaches, unpairedStudents, unregisteredCoaches, unregisteredStudents } = collectPairings();
 
   // Create HTML template from the pairings.html file
   const ui = SpreadsheetApp.getUi();
@@ -154,8 +154,10 @@ function showPairings() {
 
   // Pass the data directly to the template
   template.pairings = pairings;
-  template.unpairedStudents = unpairedStudents;
   template.unpairedCoaches = unpairedCoaches;
+  template.unpairedStudents = unpairedStudents;
+  template.missingCoaches = unregisteredCoaches;
+  template.missingStudents = unregisteredStudents;
 
   const htmlOutput = template.evaluate()
     .setTitle('Workshop Pairings')
@@ -299,6 +301,8 @@ function collectPairings() {
   const pairings = {};
   let unpairedCoaches = [];
   let unpairedStudents = [];
+  let unregisteredCoaches = [];
+  let unregisteredStudents = [];
 
   for (let i = 1; i < data.length; i++) {
     const group = data[i][COL_GROUP_1 - 1];
@@ -325,11 +329,17 @@ function collectPairings() {
       unpairedStudents = [...unpairedStudents, name1];
     } else if (isCoach(reg1, name1, role1)) {
       unpairedCoaches = [...unpairedCoaches, name1];
+    } else if (!reg1 && role1 === ROLE_STUDENT && name1 !== '') {
+      unregisteredStudents = [...unregisteredStudents, name1];
+    } else if (!reg1 && role1 === ROLE_COACH && name1 !== '') {
+      unregisteredCoaches = [...unregisteredCoaches, name1];
     }
   }
 
   unpairedCoaches.sort();
   unpairedStudents.sort();
+  unregisteredCoaches.sort();
+  unregisteredStudents.sort();
 
-  return { pairings, unpairedCoaches, unpairedStudents };
+  return { pairings, unpairedCoaches, unpairedStudents, unregisteredCoaches, unregisteredStudents };
 }

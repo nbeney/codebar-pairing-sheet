@@ -95,7 +95,7 @@
     .group-header {
       background: #e8f5e9;
       font-weight: bold;
-      color: #1a73e8;
+      color: #5f6368;
     }
 
     .coach-cell {
@@ -113,6 +113,14 @@
 
     .unpaired-table thead {
       background: #f9ab00;
+    }
+
+    .missing-table {
+      margin-bottom: 16px;
+    }
+
+    .missing-table thead {
+      background: #ea4335;
     }
 
     /* .unpaired-table tbody tr:nth-child(even) {
@@ -214,14 +222,6 @@
       </div>
     </div>
     
-    <? if (!hasData) { ?>
-      <!-- Empty state -->
-      <div class="empty-state">
-        <h3>🤷‍♀️ No pairing data found</h3>
-        <p>Make sure you have formatted your data and assigned groups to create pairings.</p>
-      </div>
-    <? } else { ?>
-      
       <? if (hasGroups) { ?>
         <!-- Pairings table -->
         <div class="section-wrapper">
@@ -235,7 +235,7 @@
               <? for (const group in pairings) { ?>
                 <!-- Group header row -->
                 <tr class="group-header">
-                  <td colspan="2"><span class="emoji"><?= ICONS.group ?></span>Group: <?= group ?></td>
+                  <td colspan="2"><?= group ?></td>
                 </tr>
                 <? for (const entry of pairings[group]) { ?>
                   <tr>
@@ -301,7 +301,49 @@
         </div>
       <? } ?>
       
-    <? } ?>
+      <? if (missingCoaches.length > 0 || missingStudents.length > 0) { ?>
+        <!-- Missing coaches and students side by side -->
+        <div class="unpaired-container">
+          <? if (missingCoaches.length > 0) { ?>
+            <div class="unpaired-section">
+              <table class="missing-table">
+                <thead>
+                  <tr>
+                    <th><span class="emoji"><?= ICONS.coach ?></span>Missing Coaches (<?= missingCoaches.length ?>)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <? for (let i = 0; i < missingCoaches.length; i++) { ?>
+                    <tr>
+                      <td><span class="emoji"><?= ICONS.coach ?></span><?= missingCoaches[i] ?></td>
+                    </tr>
+                  <? } ?>
+                </tbody>
+              </table>
+            </div>
+          <? } ?>
+          
+          <? if (missingStudents.length > 0) { ?>
+            <div class="unpaired-section">
+              <table class="missing-table">
+                <thead>
+                  <tr>
+                    <th><span class="emoji"><?= ICONS.student ?></span>Missing Students (<?= missingStudents.length ?>)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <? for (let i = 0; i < missingStudents.length; i++) { ?>
+                    <tr>
+                      <td><span class="emoji"><?= ICONS.student ?></span><?= missingStudents[i] ?></td>
+                    </tr>
+                  <? } ?>
+                </tbody>
+              </table>
+            </div>
+          <? } ?>
+        </div>
+      <? } ?>
+      
   </div>
 
   <button class="close-button" onclick="google.script.host.close()">Close</button>

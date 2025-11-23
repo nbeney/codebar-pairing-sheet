@@ -20,7 +20,6 @@ const ICONS = {
   coach: '😇',
   student: '🎓',
   pair: '😇🎓',
-  group: '📂',
 };
 
 const COLOR_HEADER = '#999999';
