@@ -29,7 +29,7 @@ const DEMO_CSV_DATA = [
 ];
 
 class Tutorial {
-    static pasteSamplePairingCsvData() {
+    static doPasteCsvData() {
         const sheet = SpreadsheetApp.getActiveSheet();
         const range = sheet.getRange(1, 1, DEMO_CSV_DATA.length, 1);
         range.setValues(DEMO_CSV_DATA);
@@ -173,7 +173,7 @@ class Tutorial {
                 'Proceed with pasting data?'
             ],
             () => {
-                Tutorial.pasteSamplePairingCsvData();
+                Tutorial.doPasteCsvData();
                 Tutorial.step3FormatCsv();
             }
         );
@@ -192,7 +192,7 @@ class Tutorial {
                 'Proceed with formatting?'
             ],
             () => {
-                formatCsv();
+                formatCsvData();
                 Tutorial.step4RegisterParticipants();
             }
         );

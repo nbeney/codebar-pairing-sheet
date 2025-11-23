@@ -2,7 +2,7 @@ function onOpen() {
   const ui = SpreadsheetApp.getUi();
   ui.createMenu('Codebar 🏳️‍🌈')
     .addItem('Reset... 🗑', 'reset')
-    .addItem('Format CSV data 🎨', 'formatCsv')
+    .addItem('Format CSV data 🎨', 'formatCsvDataData')
     .addSeparator()
     .addItem('Select coach ➖', 'selectCoach')
     .addItem('Assign coach to student ➕', 'assignSelectedCoachToStudent')
@@ -35,7 +35,7 @@ function onOpen() {
 
     // reset();
     // Tutorial.pasteSamplePairingCsvData();
-    // formatCsv();
+    // formatCsvData();
 }
 
 function reset() {
@@ -66,7 +66,7 @@ function reset() {
   sheet.getRange("A1").activate();
 }
 
-function formatCsv() {
+function formatCsvData() {
   try {
     Format.splitCSVIntoColumns();
     Format.fillEmptyCells();
