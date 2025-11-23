@@ -100,6 +100,8 @@ class Tutorial {
             'Yvonne Youthful': 'Marcus Magnificent [H]',
         };
 
+        const assignedCoachRows = new Set();
+
         // Copy coach data to student rows
         for (let i = 1; i < data.length; i++) {
             const studentName = data[i][COL_NAME_1 - 1];
@@ -112,6 +114,13 @@ class Tutorial {
                         for (let col = 0; col < NUM_COLS; col++) {
                             data[i][COL_REGISTERED_2 - 1 + col] = data[j][COL_REGISTERED_1 - 1 + col];
                         }
+                        
+                        // Copy formatting from cols 1-6 to cols 7-12
+                        const sourceRange = sheet.getRange(j + 1, 1, 1, NUM_COLS);
+                        const targetRange = sheet.getRange(i + 1, COL_REGISTERED_2, 1, NUM_COLS);
+                        sourceRange.copyTo(targetRange, SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
+                        
+                        assignedCoachRows.add(j);
                         break;
                     }
                 }
@@ -130,6 +139,12 @@ class Tutorial {
         }
 
         sheet.getRange(1, 1, data.length, data[0].length).setValues(data);
+        
+        // Clear formatting from assigned coach rows
+        for (const rowIndex of assignedCoachRows) {
+            const coachRange = sheet.getRange(rowIndex + 1, 1, 1, NUM_COLS);
+            coachRange.clearFormat();
+        }
     }
 
     static step1ResetSheet() {

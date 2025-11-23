@@ -7,7 +7,7 @@ function onOpen() {
     .addItem('Select coach ➖', 'selectCoach')
     .addItem('Assign coach to student ➕', 'assignSelectedCoachToStudent')
     .addSeparator()
-    .addItem('Show pairings ↹', 'showPairings')
+    .addItem(`Show pairings ${ICONS.pair}`, 'showPairings')
     .addSeparator()
     .addItem('Sort by name', 'sortByName')
     .addItem('Sort by role/name', 'sortByRoleName')

@@ -199,6 +199,7 @@ class Format {
       // Insert checkboxes for all data rows
       for (let i = 2; i <= newData.length; i++) {
         sheet.getRange(i, nameColIndex + 1).insertCheckboxes();
+        sheet.getRange(i, nameColIndex + NUM_COLS).insertCheckboxes();
       }
     }
   }
