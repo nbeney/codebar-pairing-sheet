@@ -306,9 +306,18 @@ class Format {
 
   static resizeColumnsToFit() {
     const sheet = SpreadsheetApp.getActiveSheet();
-    const numColumns = sheet.getLastColumn();
-    for (let i = 1; i <= numColumns; i++) {
-      sheet.autoResizeColumn(i);
+    sheet.autoResizeColumns(1, sheet.getLastColumn());
+
+    // Adjust specific columns to be wider, by an extra 15 pixels
+    const data = sheet.getDataRange().getValues();
+    const columnsToAdjust = ['Name', 'Role'];
+
+    for (const columnName of columnsToAdjust) {
+      const colIndex = data[0].indexOf(columnName);
+      if (colIndex !== -1) {
+        const currentWidth = sheet.getColumnWidth(colIndex + 1);
+        sheet.setColumnWidth(colIndex + 1, currentWidth + 15);
+      }
     }
   }
 
