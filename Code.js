@@ -158,6 +158,8 @@ function showPairings() {
   template.unpairedStudents = unpairedStudents;
   template.missingCoaches = unregisteredCoaches;
   template.missingStudents = unregisteredStudents;
+  template.GROUPS = GROUPS;
+  template.ICONS = ICONS;
 
   const htmlOutput = template.evaluate()
     .setTitle('Workshop Pairings')

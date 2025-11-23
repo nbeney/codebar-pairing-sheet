@@ -95,7 +95,7 @@
     .group-header {
       background: #e8f5e9;
       font-weight: bold;
-      color: #5f6368;
+      color: #333;
     }
 
     .coach-cell {
@@ -234,7 +234,10 @@
             <tbody>
               <? for (const group in pairings) { ?>
                 <!-- Group header row -->
-                <tr class="group-header">
+                <tr class="group-header" style="background-color: <?
+                  const groupObj = GROUPS.find(g => g.name === group);
+                  const bgColor = groupObj ? groupObj.color : '#e8f5e9';
+                ?><?= bgColor ?>;">
                   <td colspan="2"><?= group ?></td>
                 </tr>
                 <? for (const entry of pairings[group]) { ?>
