@@ -2,7 +2,7 @@ function onOpen() {
   const ui = SpreadsheetApp.getUi();
   ui.createMenu('Codebar 🏳️‍🌈')
     .addItem('Reset... 🗑', 'reset')
-    .addItem('Format CSV 🎨', 'formatCsv')
+    .addItem('Format CSV data 🎨', 'formatCsv')
     .addSeparator()
     .addItem('Select coach ➖', 'selectCoach')
     .addItem('Assign coach to student ➕', 'assignSelectedCoachToStudent')
@@ -21,8 +21,8 @@ function onOpen() {
     .addSubMenu(
       ui.createMenu('Tutorial 👣')
         .addItem('1 - Reset sheet', 'Tutorial.step1ResetSheet')
-        .addItem('2 - Paste Pairing CSV', 'Tutorial.step2PastePairingCsvData')
-        .addItem('3 - Format CSV', 'Tutorial.step3FormatCsv')
+        .addItem('2 - Paste CSV data', 'Tutorial.step2PastePairingCsvData')
+        .addItem('3 - Format CSV data', 'Tutorial.step3FormatCsv')
         .addItem('4 - Register participants', 'Tutorial.step4RegisterParticipants')
         .addItem('5 - Sort participants', 'Tutorial.step5SortParticipants')
         .addItem('6 - Assign coaches to groups', 'Tutorial.step6AssignCoachesToGroups')

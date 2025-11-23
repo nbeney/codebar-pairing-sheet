@@ -149,7 +149,7 @@ class Tutorial {
 
     static step1ResetSheet() {
         Tutorial.showStep(
-            'Step 1: Reset Sheet',
+            'Step 1: Reset sheet',
             [
                 'This will clear the entire sheet and prepare it for new data.',
                 '',
@@ -164,9 +164,11 @@ class Tutorial {
 
     static step2PastePairingCsvData() {
         Tutorial.showStep(
-            'Step 2: Paste Pairing CSV Data',
+            'Step 2: Paste CSV data',
             [
                 'This will paste sample workshop registration data into the sheet.',
+                '',
+                'Usually you will manually paste the data extracted from the workshop web page using the "Pairing CSV" function.',
                 '',
                 'Proceed with pasting data?'
             ],
@@ -179,7 +181,7 @@ class Tutorial {
 
     static step3FormatCsv() {
         Tutorial.showStep(
-            'Step 3: Format CSV Data',
+            'Step 3: Format CSV data',
             [
                 'This will format the raw CSV data by:',
                 '• Splitting into columns',
@@ -198,7 +200,7 @@ class Tutorial {
 
     static step4RegisterParticipants() {
         Tutorial.showStep(
-            'Step 4: Register Participants',
+            'Step 4: Register participants',
             [
                 'This will randomly check participants as "present" for the workshop (about 70% attendance rate).',
                 '',
@@ -213,7 +215,7 @@ class Tutorial {
 
     static step5SortParticipants() {
         Tutorial.showStep(
-            'Step 5: Sort Participants',
+            'Step 5: Sort participants',
             [
                 'This will sort participants by Group > Role > Name to make pairing easier.',
                 '',
@@ -228,7 +230,7 @@ class Tutorial {
 
     static step6AssignCoachesToGroups() {
         Tutorial.showStep(
-            'Step 6: Assign Coaches to Groups',
+            'Step 6: Assign coaches to groups',
             [
                 'In a real workshop, you would manually assign coaches to appropriate tutorial groups.',
                 '',
@@ -245,7 +247,7 @@ class Tutorial {
 
     static step7SortParticipants() {
         Tutorial.showStep(
-            'Step 7: Sort Participants',
+            'Step 7: Sort participants',
             [
                 'This will sort participants by Group > Role > Name to optimize pairing workflow.',
                 '',
@@ -260,7 +262,7 @@ class Tutorial {
 
     static step8AssignCoachesToStudents() {
         Tutorial.showStep(
-            'Step 8: Assign Coaches to Students',
+            'Step 8: Assign coaches to students',
             [
                 'This will randomly pair registered coaches with registered students.',
                 '',
@@ -275,7 +277,7 @@ class Tutorial {
 
     static step9ShowPairings() {
         Tutorial.showStep(
-            'Step 9: Show Pairings',
+            'Step 9: Show pairings',
             [
                 'This will display a summary of all pairings, unpaired participants, and missing participants.',
                 '',
@@ -285,8 +287,8 @@ class Tutorial {
                 showPairings();
                 const ui = SpreadsheetApp.getUi();
                 ui.alert(
-                    '👣 Demo Complete!',
-                    'The step-by-step demo is now complete. You can explore the pairings dialog and try other features.',
+                    '👣 Tutorial complete!',
+                    'The step-by-step tutorial is now complete. You can explore the pairings dialog and try other features.',
                     ui.ButtonSet.OK
                 );
             }
