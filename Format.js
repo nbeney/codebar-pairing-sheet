@@ -90,7 +90,7 @@ class Format {
 
     for (let i = 1; i < data.length; i++) {
       if (data[i][newAttendeeColIndex].toString().toLowerCase() === 'true') {
-        data[i][nameColIndex] = data[i][nameColIndex] + ' 🐥';
+        data[i][nameColIndex] = data[i][nameColIndex] + ' ' + ICONS.newcomer;
       }
     }
 
@@ -136,10 +136,10 @@ class Format {
       let skills = data[i][colIndex].toString();
 
       if (skills && skills !== 'N/A') {
-        Object.keys(skillsMap).forEach(key => {
+        for (const key of Object.keys(skillsMap)) {
           const regex = new RegExp('\\b' + key + '\\b', 'gi');
           skills = skills.replace(regex, skillsMap[key]);
-        });
+        }
 
         data[i][colIndex] = skills;
       }
@@ -319,6 +319,15 @@ class Format {
         sheet.setColumnWidth(colIndex + 1, currentWidth + 15);
       }
     }
+
+    // Make columns 7-10 the same width as columns 1-4
+    // Make columns 11-12 150 pixels wide
+    for (let i = 0; i < 4; i++) {
+      const sourceWidth = sheet.getColumnWidth(i + 1);
+      sheet.setColumnWidth(i + 7, sourceWidth);
+    }
+    sheet.setColumnWidth(11, 150);
+    sheet.setColumnWidth(12, 150);
   }
 
   static clipColumns() {

@@ -68,7 +68,7 @@
     }
 
     thead {
-      background: #1a73e8;
+      background: #34a853;
       color: white;
     }
 
@@ -228,23 +228,23 @@
           <table>
             <thead>
               <tr>
-                <th colspan="2"><span class="emoji">👩‍🏫👨‍🎓</span>Paired Coaches & Students</th>
+                <th colspan="2"><span class="emoji"><?= ICONS.pair ?></span>Paired Coaches & Students</th>
               </tr>
             </thead>
             <tbody>
               <? for (const group in pairings) { ?>
                 <!-- Group header row -->
                 <tr class="group-header">
-                  <td colspan="2"><span class="emoji">📂</span>Group: <?= group ?></td>
+                  <td colspan="2"><span class="emoji"><?= ICONS.group ?></span>Group: <?= group ?></td>
                 </tr>
                 <? for (const entry of pairings[group]) { ?>
                   <tr>
-                    <td class="coach-cell"><span class="emoji">👩‍🏫</span><?= entry.coach ?></td>
+                    <td class="coach-cell"><span class="emoji"><?= ICONS.coach ?></span><?= entry.coach ?></td>
                     <td class="student-cell">
                       <? if (entry.students.length > 0) { ?>
                         <? for (let i = 0; i < entry.students.length; i++) { ?>
                           <? if (i > 0) { ?><br><? } ?>
-                          <span class="emoji">👨‍🎓</span><?= entry.students[i] ?>
+                          <span class="emoji"><?= ICONS.student ?></span><?= entry.students[i] ?>
                         <? } ?>
                       <? } else { ?>
                         <em style="color: #f9ab00;">No students assigned</em>
@@ -266,13 +266,13 @@
               <table class="unpaired-table">
                 <thead>
                   <tr>
-                    <th><span class="emoji">👩‍🏫</span>Unpaired Coaches (<?= unpairedCoaches.length ?>)</th>
+                    <th><span class="emoji"><?= ICONS.coach ?></span>Unpaired Coaches (<?= unpairedCoaches.length ?>)</th>
                   </tr>
                 </thead>
                 <tbody>
                   <? for (let i = 0; i < unpairedCoaches.length; i++) { ?>
                     <tr>
-                      <td><span class="emoji">👩‍🏫</span><?= unpairedCoaches[i] ?></td>
+                      <td><span class="emoji"><?= ICONS.coach ?></span><?= unpairedCoaches[i] ?></td>
                     </tr>
                   <? } ?>
                 </tbody>
@@ -285,13 +285,13 @@
               <table class="unpaired-table">
                 <thead>
                   <tr>
-                    <th><span class="emoji">👨‍🎓</span>Unpaired Students (<?= unpairedStudents.length ?>)</th>
+                    <th><span class="emoji"><?= ICONS.student ?></span>Unpaired Students (<?= unpairedStudents.length ?>)</th>
                   </tr>
                 </thead>
                 <tbody>
                   <? for (let i = 0; i < unpairedStudents.length; i++) { ?>
                     <tr>
-                      <td><span class="emoji">👨‍🎓</span><?= unpairedStudents[i] ?></td>
+                      <td><span class="emoji"><?= ICONS.student ?></span><?= unpairedStudents[i] ?></td>
                     </tr>
                   <? } ?>
                 </tbody>

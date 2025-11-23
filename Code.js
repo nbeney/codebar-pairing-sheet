@@ -13,6 +13,7 @@ function onOpen() {
     .addItem('Sort by name', 'sortByName')
     .addItem('Sort by role/name', 'sortByRoleName')
     .addItem('Sort by group/role/name', 'sortByGroupRoleName')
+    .addItem('Sort by role/group/name', 'sortByRoleGroupName')
     .addSeparator()
     .addItem('Filter all', 'filterAll')
     .addItem('Filter present only 👍', 'filterPresentOnly')
@@ -145,7 +146,7 @@ function assignSelectedCoachToStudent() {
 
 // This macro should be imported and assigned to Ctrl-Alt-Shift 4
 function showPairings() {
-  const { pairings, unpairedStudents, unpairedCoaches } = collectPairings();
+  const { pairings, unpairedCoaches, unpairedStudents } = collectPairings();
 
   // Create HTML template from the pairings.html file
   const ui = SpreadsheetApp.getUi();
@@ -181,6 +182,9 @@ function sortByCurrentCriteria() {
       break;
     case 'BY_GROUP_ROLE_NAME':
       sortByGroupRoleName();
+      break;
+    case 'BY_ROLE_GROUP_NAME':
+      sortByRoleGroupName();
       break;
     default:
       sortByName();
@@ -236,6 +240,25 @@ function sortByGroupRoleName() {
   PropertiesService.getScriptProperties().setProperty(PROP_SORT_CRITERIA, 'BY_GROUP_ROLE_NAME');
 }
 
+function sortByRoleGroupName() {
+  const sheet = SpreadsheetApp.getActiveSheet();
+  const data = sheet.getDataRange().getValues();
+  const roleColIndex = data[0].indexOf('Role');
+  const groupColIndex = data[0].indexOf('Group');
+  const nameColIndex = data[0].indexOf('Name');
+
+  if (roleColIndex !== -1 && groupColIndex !== -1 && nameColIndex !== -1) {
+    const range = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn());
+    range.sort([
+      { column: roleColIndex + 1, ascending: true },
+      { column: groupColIndex + 1, ascending: true },
+      { column: nameColIndex + 1, ascending: true }
+    ]);
+  }
+
+  PropertiesService.getScriptProperties().setProperty(PROP_SORT_CRITERIA, 'BY_ROLE_GROUP_NAME');
+}
+
 function filterAll() {
   const sheet = SpreadsheetApp.getActiveSheet();
   const criteria = SpreadsheetApp.newFilterCriteria().setHiddenValues([]).build();
@@ -267,15 +290,15 @@ function showHelp() {
 }
 
 function collectPairings() {
-  const isStudent = (reg, name, role) => { return reg && role === ROLE_STUDENT && name !== ''; }
   const isCoach = (reg, name, role) => { return reg && role === ROLE_COACH && name !== ''; }
+  const isStudent = (reg, name, role) => { return reg && role === ROLE_STUDENT && name !== ''; }
 
   const sheet = SpreadsheetApp.getActiveSheet();
   const data = sheet.getDataRange().getValues();
 
   const pairings = {};
-  let unpairedStudents = [];
   let unpairedCoaches = [];
+  let unpairedStudents = [];
 
   for (let i = 1; i < data.length; i++) {
     const group = data[i][COL_GROUP_1 - 1];
@@ -305,8 +328,8 @@ function collectPairings() {
     }
   }
 
-  unpairedStudents.sort();
   unpairedCoaches.sort();
+  unpairedStudents.sort();
 
-  return { pairings, unpairedStudents, unpairedCoaches };
+  return { pairings, unpairedCoaches, unpairedStudents };
 }

@@ -116,8 +116,8 @@ class Demo {
             // Copy data instead of moving to preserve source for multiple assignments
             sourceRange.copyTo(targetRange, SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
 
-            // Color the target range as coach color
-            targetRange.setBackground(COLOR_COACH);
+            // // Color the target range as coach color
+            // targetRange.setBackground(COLOR_COACH);
 
             // Track assignments
             coachAssignments[coachRowIdx] = (coachAssignments[coachRowIdx] || 0) + 1;

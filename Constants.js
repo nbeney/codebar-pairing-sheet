@@ -15,12 +15,18 @@ const COL_GROUP_2 = COL_GROUP_1 + NUM_COLS;
 const COL_SKILLS_TUTORIAL_2 = COL_SKILLS_TUTORIAL_1 + NUM_COLS;
 const COL_NOTE_2 = COL_NOTE_1 + NUM_COLS;
 
-const COLOR_HEADER = '#999999';
-const COLOR_COACH = '#d9ead3';
-const COLOR_STUDENT = '#cfe2f3';
+const ICONS = {
+  newcomer: '🐥',
+  coach: '😇',
+  student: '🎓',
+  pair: '😇🎓',
+  group: '📂',
+};
 
-const ROLE_COACH = 'Coach 🏫';
-const ROLE_STUDENT = 'Student 🎓';
+const COLOR_HEADER = '#999999';
+
+const ROLE_COACH = 'Coach ' + ICONS.coach;
+const ROLE_STUDENT = 'Student ' + ICONS.student;
 
 const PROP_SORT_CRITERIA = 'SORT_CRITERIA';
 const PROP_COACH_ROW_INDEX = 'COACH_ROW_INDEX';
