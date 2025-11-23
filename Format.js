@@ -235,10 +235,12 @@ class Format {
         { range: sheet.getRange(2, 1, sheet.getLastRow() - 1, NUM_COLS), groupColIndex: groupColIndex },
         { range: sheet.getRange(2, NUM_COLS + 1, sheet.getLastRow() - 1, NUM_COLS), groupColIndex: groupColIndex + NUM_COLS }
       ];
-      
+
       for (const { range, groupColIndex: colIndex } of columnRanges) {
+        const cond = group.name === 'Unknown' ? '<>""' : `="${group.name}"`;
+        const formula = `=$${String.fromCharCode(65 + colIndex)}2${cond}`;
         const rule = SpreadsheetApp.newConditionalFormatRule()
-          .whenFormulaSatisfied(`=$${String.fromCharCode(65 + colIndex)}2="${group.name}"`)
+          .whenFormulaSatisfied(formula)
           .setBackground(group.color)
           .setFontColor('#000000')
           .setRanges([range])
