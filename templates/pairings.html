@@ -31,32 +31,6 @@
       align-items: center;
     }
 
-    .stats {
-      background: #e8f5e9;
-      border-radius: 8px;
-      padding: 8px 12px;
-      margin-bottom: 12px;
-      display: flex;
-      justify-content: space-around;
-      text-align: center;
-    }
-
-    .stat-item {
-      flex: 1;
-    }
-
-    .stat-number {
-      font-size: 18px;
-      font-weight: bold;
-      color: #34a853;
-    }
-
-    .stat-label {
-      font-size: 11px;
-      color: #5f6368;
-      text-transform: uppercase;
-    }
-
     table {
       width: 100%;
       border-collapse: collapse;
@@ -187,40 +161,8 @@
 <body>
   <div id="content">
     <?
-      // Calculate stats
-      let totalPairings = 0;
-      let totalStudentsInPairs = 0;
-      
-      for (const group in pairings) {
-        for (const entry of pairings[group]) {
-          totalPairings++;
-          totalStudentsInPairs += entry.students.length;
-        }
-      }
-      
       const hasGroups = Object.keys(pairings).length > 0;
-      const hasData = hasGroups || unpairedStudents.length > 0 || unpairedCoaches.length > 0;
     ?>
-    
-    <!-- Stats section -->
-    <div class="stats">
-      <div class="stat-item">
-        <div class="stat-number"><?= totalPairings ?></div>
-        <div class="stat-label">Pairings</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number"><?= totalStudentsInPairs ?></div>
-        <div class="stat-label">Students Paired</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number"><?= unpairedStudents.length ?></div>
-        <div class="stat-label">Unpaired Students</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number"><?= unpairedCoaches.length ?></div>
-        <div class="stat-label">Unpaired Coaches</div>
-      </div>
-    </div>
     
       <? if (hasGroups) { ?>
         <!-- Pairings table -->
