@@ -152,6 +152,7 @@ class Tutorial {
             'Step 1: Reset sheet',
             [
                 'This will clear the entire sheet and prepare it for new data.',
+                'It is unnecessary if you start with a blank sheet.',
                 '',
                 'Proceed with reset?'
             ],
@@ -166,9 +167,9 @@ class Tutorial {
         Tutorial.showStep(
             'Step 2: Paste CSV data',
             [
-                'This will paste sample workshop registration data into the sheet.',
+                'You will manually paste into A1 the participants list that you have exported from the workshop web page using the "Pairing CSV" function.',
                 '',
-                'Usually you will manually paste the data extracted from the workshop web page using the "Pairing CSV" function.',
+                'In this tutorial we will use some sample data instead.',
                 '',
                 'Proceed with pasting data?'
             ],
@@ -183,11 +184,7 @@ class Tutorial {
         Tutorial.showStep(
             'Step 3: Format CSV data',
             [
-                'This will format the raw CSV data by:',
-                '• Splitting into columns',
-                '• Adding icons for roles',
-                '• Creating group assignments',
-                '• Adding checkboxes for registration',
+                'This will format the raw CSV data to make it easier to work with later',
                 '',
                 'Proceed with formatting?'
             ],
@@ -202,7 +199,9 @@ class Tutorial {
         Tutorial.showStep(
             'Step 4: Register participants',
             [
-                'This will randomly check participants as "present" for the workshop (about 70% attendance rate).',
+                'You will manually check the participants as they arrive to the workshop.',
+                '',
+                'In this tutorial we will use some sample data instead.',
                 '',
                 'Proceed with registration?'
             ],
@@ -232,9 +231,9 @@ class Tutorial {
         Tutorial.showStep(
             'Step 6: Assign coaches to groups',
             [
-                'In a real workshop, you would manually assign coaches to appropriate tutorial groups.',
+                'You will manually assign the coaches to groups, based on their skills and what the students need.',
                 '',
-                `For this demo, coaches will remain in the "${GROUP_TBD.name}" group (highlighted in light red).`,
+                'In this tutorial we will use some sample data instead.',
                 '',
                 'Proceed to next step?'
             ],
@@ -249,7 +248,7 @@ class Tutorial {
         Tutorial.showStep(
             'Step 7: Sort participants',
             [
-                'This will sort participants by Group > Role > Name to optimize pairing workflow.',
+                'This will sort participants by Group > Role > Name to make pairing easier.',
                 '',
                 'Proceed with sorting?'
             ],
@@ -264,7 +263,11 @@ class Tutorial {
         Tutorial.showStep(
             'Step 8: Assign coaches to students',
             [
-                'This will randomly pair registered coaches with registered students.',
+                'You will manually assign coaches to students based on their groups.', 
+                '',
+                'This usually involves selecting a coach with all its columns, cutting it with Ctrl-X and pasting it immediately to the right of a students with Ctrl-V.',
+                '',
+                'In this tutorial we will use some sample data instead.',
                 '',
                 'Proceed with pairing?'
             ],
@@ -287,8 +290,8 @@ class Tutorial {
                 showPairings();
                 const ui = SpreadsheetApp.getUi();
                 ui.alert(
-                    '👣 Tutorial complete!',
-                    'The step-by-step tutorial is now complete. You can explore the pairings dialog and try other features.',
+                    `${ICONS.tutorial} Tutorial complete!`,
+                    'The tutorial is now complete. You can explore the pairings dialog and try other features.',
                     ui.ButtonSet.OK
                 );
             }
@@ -300,7 +303,7 @@ class Tutorial {
         const ui = SpreadsheetApp.getUi();
         const message = lines.join('\n');
         const result = ui.alert(
-            '👣 ' + title,
+            `${ICONS.tutorial} ` + title,
             message,
             ui.ButtonSet.OK_CANCEL
         );

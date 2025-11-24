@@ -2,10 +2,10 @@ function onOpen() {
   const ui = SpreadsheetApp.getUi();
   ui.createMenu('Codebar 🏳️‍🌈')
     .addItem('Reset... 🗑', 'reset')
-    .addItem('Format CSV data 🎨', 'formatCsvDataData')
-    .addSeparator()
-    .addItem('Select coach ➖', 'selectCoach')
-    .addItem('Assign coach to student ➕', 'assignSelectedCoachToStudent')
+    .addItem('Format CSV data 🖌️', 'formatCsvDataData')
+    // .addSeparator()
+    // .addItem('Select coach ➖', 'selectCoach')
+    // .addItem('Assign coach to student ➕', 'assignSelectedCoachToStudent')
     .addSeparator()
     .addItem(`Show pairings ${ICONS.pair}`, 'showPairings')
     .addSeparator()
@@ -19,7 +19,7 @@ function onOpen() {
     .addItem('Filter absent only 👎', 'filterAbsentOnly')
     .addSeparator()
     .addSubMenu(
-      ui.createMenu('Tutorial 👣')
+      ui.createMenu(`Tutorial ${ICONS.tutorial}`)
         .addItem('1 - Reset sheet', 'Tutorial.step1ResetSheet')
         .addItem('2 - Paste CSV data', 'Tutorial.step2PastePairingCsvData')
         .addItem('3 - Format CSV data', 'Tutorial.step3FormatCsv')
@@ -32,10 +32,6 @@ function onOpen() {
     )
     .addItem('Help 🛟', 'showHelp')
     .addToUi();
-
-    // reset();
-    // Tutorial.pasteSamplePairingCsvData();
-    // formatCsvData();
 }
 
 function reset() {
@@ -55,7 +51,7 @@ function reset() {
 
   const bold = SpreadsheetApp.newTextStyle().setBold(true).build();
   const message = SpreadsheetApp.newRichTextValue()
-    .setText('Paste the output of Pairing CSV here then run the Format CSV 🎨 macro')
+    .setText('Paste the output of Pairing CSV here then run the Format CSV 🖌️ macro')
     //        0         1         2         3         4         5         6         7         8
     //        012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
     .setTextStyle(20, 31, bold)

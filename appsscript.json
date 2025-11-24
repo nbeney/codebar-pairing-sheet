@@ -6,49 +6,13 @@
   "runtimeVersion": "V8",
   "sheets": {
     "macros": [{
-      "menuName": "formatClip",
-      "functionName": "formatClip"
-    }, {
-      "menuName": "Untitled macro",
-      "functionName": "Untitledmacro"
-    }, {
-      "menuName": "Untitled macro 1",
-      "functionName": "Untitledmacro1"
-    }, {
-      "menuName": "addFilter",
-      "functionName": "addFilter"
-    }, {
-      "menuName": "filterTrue",
-      "functionName": "filterTrue"
-    }, {
-      "menuName": "filterFalse",
-      "functionName": "filterFalse"
-    }, {
-      "menuName": "removeFilter",
-      "functionName": "removeFilter"
-    }, {
-      "menuName": "selectCurrent",
-      "functionName": "selectCurrent",
-      "defaultShortcut": "Ctrl+Alt+Shift+1"
-    }, {
-      "menuName": "selectCoach",
-      "functionName": "selectCoach",
-      "defaultShortcut": "Ctrl+Alt+Shift+1"
-    }, {
-      "menuName": "assignSelectedCoachToStudent",
-      "functionName": "assignSelectedCoachToStudent",
-      "defaultShortcut": "Ctrl+Alt+Shift+2"
-    }, {
       "menuName": "sortByCurrentCriteria",
       "functionName": "sortByCurrentCriteria",
-      "defaultShortcut": "Ctrl+Alt+Shift+3"
-    }, {
-      "menuName": "dropDown",
-      "functionName": "dropDown"
+      "defaultShortcut": "Ctrl+Alt+Shift+1"
     }, {
       "menuName": "showPairings",
       "functionName": "showPairings",
-      "defaultShortcut": "Ctrl+Alt+Shift+4"
+      "defaultShortcut": "Ctrl+Alt+Shift+2"
     }]
   }
 }
