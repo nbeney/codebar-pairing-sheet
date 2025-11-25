@@ -2,7 +2,7 @@ function onOpen() {
   const ui = SpreadsheetApp.getUi();
   ui.createMenu('Codebar 🏳️‍🌈')
     .addItem('Reset... 🗑', 'reset')
-    .addItem('Format CSV data 🖌️', 'formatCsvDataData')
+    .addItem('Format CSV data 🖌️', 'formatCsvData')
     // .addSeparator()
     // .addItem('Select coach ➖', 'selectCoach')
     // .addItem('Assign coach to student ➕', 'assignSelectedCoachToStudent')
