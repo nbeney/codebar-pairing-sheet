@@ -54,7 +54,7 @@ function reset() {
     //        0         1         2         3         4         5         6         7         8
     //        012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
     .setTextStyle(20, 31, bold)
-    .setTextStyle(50, 55, bold)
+    .setTextStyle(50, 56, bold)
     .build();
   sheet.getRange("A1").setRichTextValue(message);
   sheet.getRange("A1").setFontStyle('italic');
@@ -72,12 +72,10 @@ function formatCsvData() {
     Format.splitCSVIntoColumns(); // structure
     Format.fillEmptyCells(); // content
     Format.flagNewcomersAndDeleteNewAttendeesColumn(); // content
-    Format.compactPronouns(); // content
     Format.flagCoachesAndStudents(); // content
-    Format.normalizeTechnologies('Skills', SKILLS_MAP); // content
-    Format.normalizeTechnologies('Note', SKILLS_MAP); // content
-    Format.copySkillsForCoaches(); // structure & content
-    Format.deleteSkillsAndRenameTutorialColumn(); 
+    Format.mergeSkillsAndTutorialColumns(); // content
+    Format.normalizeTechnologies('Skills/Tutorial', SKILLS_MAP); // content
+    Format.normalizePronouns(); // content
     Format.insertRegisteredColumn(); // structure
     Format.insertGroupColumn(); // structure
     Format.setGroupForCoachesAndStudents(); // content

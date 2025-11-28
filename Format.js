@@ -41,7 +41,70 @@ class Format {
     sheet.deleteColumn(newAttendeeColIndex + 1);    
   }
 
-  static compactPronouns() {
+  static flagCoachesAndStudents() {
+    const sheet = SpreadsheetApp.getActiveSheet();
+    const data = sheet.getDataRange().getValues();
+    const roleColIndex = data[0].indexOf('Role');
+
+    if (roleColIndex === -1) return;
+
+    for (let i = 1; i < data.length; i++) {
+      if (data[i][roleColIndex] === 'Coach') {
+        data[i][roleColIndex] = ROLE_COACH;
+      } else if (data[i][roleColIndex] === 'Student') {
+        data[i][roleColIndex] = ROLE_STUDENT;
+      }
+    }
+
+    sheet.getDataRange().setValues(data);
+  }
+
+  static mergeSkillsAndTutorialColumns() {
+    const sheet = SpreadsheetApp.getActiveSheet();
+    const data = sheet.getDataRange().getValues();
+    const roleColIndex = data[0].indexOf('Role');
+    const tutorialColIndex = data[0].indexOf('Tutorial');
+    const skillsColIndex = data[0].indexOf('Skills');
+
+    if (roleColIndex === -1 || tutorialColIndex === -1 || skillsColIndex === -1) return;
+
+    // Copy 'Skills' to 'Tutorial' for coaches and rename 'Tutorial' column to 'Skills/Tutorial'
+    data[0][tutorialColIndex] = 'Skills/Tutorial';
+    for (let i = 1; i < data.length; i++) {
+      if (data[i][roleColIndex] === ROLE_COACH) {
+        data[i][tutorialColIndex] = data[i][skillsColIndex];
+      }
+    }
+    sheet.getDataRange().setValues(data);
+
+    // Delete the 'Skills' column
+    sheet.deleteColumn(skillsColIndex + 1);
+  }
+
+  static normalizeTechnologies(columnName, skillsMap) {
+    const sheet = SpreadsheetApp.getActiveSheet();
+    const data = sheet.getDataRange().getValues();
+    const colIndex = data[0].indexOf(columnName);
+
+    if (colIndex === -1) return;
+
+    for (let i = 1; i < data.length; i++) {
+      let skills = data[i][colIndex].toString();
+
+      if (skills && skills !== 'N/A') {
+        for (const key of Object.keys(skillsMap)) {
+          const regex = new RegExp('\\b' + key + '\\b', 'gi');
+          skills = skills.replace(regex, skillsMap[key]);
+        }
+
+        data[i][colIndex] = skills;
+      }
+    }
+
+    sheet.getDataRange().setValues(data);
+  }
+
+  static normalizePronouns() {
     const sheet = SpreadsheetApp.getActiveSheet();
     const data = sheet.getDataRange().getValues();
     const nameColIndex = data[0].indexOf('Name');
@@ -95,83 +158,6 @@ class Format {
     }
 
     sheet.getDataRange().setValues(data);
-  }
-
-  static flagCoachesAndStudents() {
-    const sheet = SpreadsheetApp.getActiveSheet();
-    const data = sheet.getDataRange().getValues();
-    const roleColIndex = data[0].indexOf('Role');
-
-    if (roleColIndex === -1) return;
-
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][roleColIndex] === 'Coach') {
-        data[i][roleColIndex] = ROLE_COACH;
-      } else if (data[i][roleColIndex] === 'Student') {
-        data[i][roleColIndex] = ROLE_STUDENT;
-      }
-    }
-
-    sheet.getDataRange().setValues(data);
-  }
-
-  static normalizeTechnologies(columnName, skillsMap) {
-    const sheet = SpreadsheetApp.getActiveSheet();
-    const data = sheet.getDataRange().getValues();
-    const colIndex = data[0].indexOf(columnName);
-
-    if (colIndex === -1) return;
-
-    for (let i = 1; i < data.length; i++) {
-      let skills = data[i][colIndex].toString();
-
-      if (skills && skills !== 'N/A') {
-        for (const key of Object.keys(skillsMap)) {
-          const regex = new RegExp('\\b' + key + '\\b', 'gi');
-          skills = skills.replace(regex, skillsMap[key]);
-        }
-
-        data[i][colIndex] = skills;
-      }
-    }
-
-    sheet.getDataRange().setValues(data);
-  }
-
-  static copySkillsForCoaches() {
-    const sheet = SpreadsheetApp.getActiveSheet();
-    const data = sheet.getDataRange().getValues();
-    const roleColIndex = data[0].indexOf('Role');
-    const skillsColIndex = data[0].indexOf('Skills');
-    const tutorialColIndex = data[0].indexOf('Tutorial');
-
-    if (roleColIndex === -1 || skillsColIndex === -1 || tutorialColIndex === -1) return;
-
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][roleColIndex] === ROLE_COACH) {
-        data[i][tutorialColIndex] = data[i][skillsColIndex];
-      }
-    }
-
-    sheet.getDataRange().setValues(data);
-  }
-
-  static deleteSkillsAndRenameTutorialColumn() {
-    const sheet = SpreadsheetApp.getActiveSheet();
-    const data = sheet.getDataRange().getValues();
-    const skillsColIndex = data[0].indexOf('Skills');
-
-    if (skillsColIndex !== -1) {
-      sheet.deleteColumn(skillsColIndex + 1);
-    }
-
-    // Refresh data after deletion
-    const updatedData = sheet.getDataRange().getValues();
-    const tutorialColIndex = updatedData[0].indexOf('Tutorial');
-
-    if (tutorialColIndex !== -1) {
-      sheet.getRange(1, tutorialColIndex + 1).setValue('Skills/Tutorial');
-    }
   }
 
   static insertRegisteredColumn() {
