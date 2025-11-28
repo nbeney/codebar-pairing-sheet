@@ -77,16 +77,19 @@ function formatCsvData() {
     Format.normalizeTechnologies('Skills/Tutorial', SKILLS_MAP); // content
     Format.normalizePronouns(); // content
     Format.insertRegisteredColumn(); // structure
+
     Format.insertGroupColumn(); // structure
     Format.setGroupForCoachesAndStudents(); // content
+    Format.renameColumnHeaders(); // content
 
-    Format.sortAttendees(); // appearance
     Format.freezeTopRow(); // appearance
     Format.formatHeaderRow(); // appearance
     Format.duplicateHeaders(); // appearance
     Format.resizeColumnsToFit(); // appearance
     Format.clipColumns(); // appearance
     Format.addFilter();
+
+    Format.sortAttendees(); // appearance
 
     Utils.showInfo('Formatting completed successfully!');
   } catch (e) {
@@ -196,7 +199,7 @@ function sortByCurrentCriteria() {
 function sortByName() {
   const sheet = SpreadsheetApp.getActiveSheet();
   const data = sheet.getDataRange().getValues();
-  const nameColIndex = data[0].indexOf('Name');
+  const nameColIndex = data[0].indexOf(HEADER_NAME);
 
   if (nameColIndex !== -1) {
     const range = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn());
@@ -209,8 +212,8 @@ function sortByName() {
 function sortByRoleName() {
   const sheet = SpreadsheetApp.getActiveSheet();
   const data = sheet.getDataRange().getValues();
-  const roleColIndex = data[0].indexOf('Role');
-  const nameColIndex = data[0].indexOf('Name');
+  const roleColIndex = data[0].indexOf(HEADER_ROLE);
+  const nameColIndex = data[0].indexOf(HEADER_NAME);
 
   if (roleColIndex !== -1 && nameColIndex !== -1) {
     const range = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn());
@@ -226,9 +229,9 @@ function sortByRoleName() {
 function sortByGroupRoleName() {
   const sheet = SpreadsheetApp.getActiveSheet();
   const data = sheet.getDataRange().getValues();
-  const groupColIndex = data[0].indexOf('Group');
-  const roleColIndex = data[0].indexOf('Role');
-  const nameColIndex = data[0].indexOf('Name');
+  const groupColIndex = data[0].indexOf(HEADER_GROUP);
+  const roleColIndex = data[0].indexOf(HEADER_ROLE);
+  const nameColIndex = data[0].indexOf(HEADER_NAME);
 
   if (groupColIndex !== -1 && roleColIndex !== -1 && nameColIndex !== -1) {
     const range = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn());
@@ -245,9 +248,9 @@ function sortByGroupRoleName() {
 function sortByRoleGroupName() {
   const sheet = SpreadsheetApp.getActiveSheet();
   const data = sheet.getDataRange().getValues();
-  const roleColIndex = data[0].indexOf('Role');
-  const groupColIndex = data[0].indexOf('Group');
-  const nameColIndex = data[0].indexOf('Name');
+  const roleColIndex = data[0].indexOf(HEADER_ROLE);
+  const groupColIndex = data[0].indexOf(HEADER_GROUP);
+  const nameColIndex = data[0].indexOf(HEADER_NAME);
 
   if (roleColIndex !== -1 && groupColIndex !== -1 && nameColIndex !== -1) {
     const range = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn());

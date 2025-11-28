@@ -250,17 +250,18 @@ class Format {
     sheet.getDataRange().setValues(data);
   }
 
-  static sortAttendees() {
+  static renameColumnHeaders() {
     const sheet = SpreadsheetApp.getActiveSheet();
     const data = sheet.getDataRange().getValues();
-    const nameColIndex = data[0].indexOf('Name');
 
-    if (nameColIndex === -1) return;
+    data[0][COL_REGISTERED_1 - 1] = HEADER_REGISTERED;
+    data[0][COL_NAME_1 - 1] = HEADER_NAME;
+    data[0][COL_ROLE_1 - 1] = HEADER_ROLE;
+    data[0][COL_GROUP_1 - 1] = HEADER_GROUP;
+    data[0][COL_SKILLS_TUTORIAL_1 - 1] = HEADER_SKILLS_TUTORIAL;
+    data[0][COL_NOTE_1 - 1] = HEADER_NOTE;
 
-    const range = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn());
-    range.sort([
-      { column: nameColIndex + 1, ascending: true }
-    ]);
+    sheet.getDataRange().setValues(data);
   }
 
   static freezeTopRow() {
@@ -288,7 +289,7 @@ class Format {
 
     // Adjust specific columns to be wider, by an extra 15 pixels
     const data = sheet.getDataRange().getValues();
-    const columnsToAdjust = ['Name', 'Role'];
+    const columnsToAdjust = [HEADER_NAME, HEADER_ROLE];
 
     for (const columnName of columnsToAdjust) {
       const colIndex = data[0].indexOf(columnName);
@@ -317,5 +318,18 @@ class Format {
   static addFilter() {
     const sheet = SpreadsheetApp.getActiveSheet();
     sheet.getDataRange().createFilter();
+  }
+
+  static sortAttendees() {
+    const sheet = SpreadsheetApp.getActiveSheet();
+    const data = sheet.getDataRange().getValues();
+    const nameColIndex = data[0].indexOf(HEADER_NAME);
+
+    if (nameColIndex === -1) return;
+
+    const range = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn());
+    range.sort([
+      { column: nameColIndex + 1, ascending: true }
+    ]);
   }
 }

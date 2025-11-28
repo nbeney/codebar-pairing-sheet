@@ -25,7 +25,7 @@ const ICONS = {
 };
 
 const HEADER_REGISTERED = '??';
-const HEADER_NAME = 'Name';
+const HEADER_NAME = `Name (${ICONS.newcomer}New ${ICONS.host}Host)`;
 const HEADER_ROLE = 'Role';
 const HEADER_GROUP = 'Group';
 const HEADER_SKILLS_TUTORIAL = 'Skills/Tutorial';
