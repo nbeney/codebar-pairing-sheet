@@ -204,6 +204,7 @@ function sortByName() {
   }
 
   PropertiesService.getScriptProperties().setProperty(PROP_SORT_CRITERIA, 'BY_NAME');
+  Format.applyConditionalFormatting();
 }
 
 function sortByRoleName() {
@@ -221,6 +222,7 @@ function sortByRoleName() {
   }
 
   PropertiesService.getScriptProperties().setProperty(PROP_SORT_CRITERIA, 'BY_ROLE_NAME');
+  Format.applyConditionalFormatting();
 }
 
 function sortByGroupRoleName() {
@@ -240,6 +242,7 @@ function sortByGroupRoleName() {
   }
 
   PropertiesService.getScriptProperties().setProperty(PROP_SORT_CRITERIA, 'BY_GROUP_ROLE_NAME');
+  Format.applyConditionalFormatting();
 }
 
 function sortByRoleGroupName() {
@@ -259,6 +262,7 @@ function sortByRoleGroupName() {
   }
 
   PropertiesService.getScriptProperties().setProperty(PROP_SORT_CRITERIA, 'BY_ROLE_GROUP_NAME');
+  Format.applyConditionalFormatting();
 }
 
 function filterAll() {

@@ -179,40 +179,21 @@ class Format {
     }
   }
 
-  static insertGroupColumn() {
+  static applyConditionalFormatting(l) {
     const sheet = SpreadsheetApp.getActiveSheet();
     const data = sheet.getDataRange().getValues();
-    const roleColIndex = data[0].indexOf('Role');
-    const groupColIndex = roleColIndex + 1;
-
-    if (roleColIndex === -1) return;
-
-    // Insert the column
-
-    sheet.insertColumnAfter(roleColIndex + 1);
-    sheet.getRange(1, roleColIndex + 2).setValue('Group');
-
-    // Add the data validation
-
-    const groups = GROUPS.map(g => g.name);
-    const val = SpreadsheetApp.newDataValidation()
-      .setAllowInvalid(true)
-      .requireValueInList(groups, true)
-      .build();
-    sheet.getRange(2, groupColIndex + 1, sheet.getLastRow() - 1).setDataValidation(val);
-    sheet.getRange(2, groupColIndex + 1 + NUM_COLS, sheet.getLastRow() - 1).setDataValidation(val);
-
-    // Add the conditional formatting
-
+    const groupColIndex = data[0].indexOf(HEADER_GROUP);
     const rules = sheet.getConditionalFormatRules();
 
+    if (groupColIndex === -1) return;
+  
     for (const group of GROUPS) {
       // Create rules for both column ranges
       const columnRanges = [
         { range: sheet.getRange(2, 1, sheet.getLastRow() - 1, NUM_COLS), groupColIndex: groupColIndex },
         { range: sheet.getRange(2, NUM_COLS + 1, sheet.getLastRow() - 1, NUM_COLS), groupColIndex: groupColIndex + NUM_COLS }
       ];
-
+  
       for (const { range, groupColIndex: colIndex } of columnRanges) {
         const cond = group.name === GROUP_TBD.name ? '<>""' : `="${group.name}"`;
         const formula = `=$${String.fromCharCode(65 + colIndex)}2${cond}`;
@@ -226,6 +207,31 @@ class Format {
       }
     }
     sheet.setConditionalFormatRules(rules);
+  }
+  
+  static insertGroupColumn() {
+    const sheet = SpreadsheetApp.getActiveSheet();
+    const data = sheet.getDataRange().getValues();
+    const roleColIndex = data[0].indexOf('Role');
+    const groupColIndex = roleColIndex + 1;
+  
+    if (roleColIndex === -1) return;
+  
+    // Insert the column
+    sheet.insertColumnAfter(roleColIndex + 1);
+    sheet.getRange(1, roleColIndex + 2).setValue('Group');
+  
+    // Add the data validation
+    const groups = GROUPS.map(g => g.name);
+    const val = SpreadsheetApp.newDataValidation()
+      .setAllowInvalid(true)
+      .requireValueInList(groups, true)
+      .build();
+    sheet.getRange(2, groupColIndex + 1, sheet.getLastRow() - 1).setDataValidation(val);
+    sheet.getRange(2, groupColIndex + 1 + NUM_COLS, sheet.getLastRow() - 1).setDataValidation(val);
+  
+    // Add the conditional formatting
+    Format.applyConditionalFormatting();
   }
 
   static setGroupForCoachesAndStudents() {
