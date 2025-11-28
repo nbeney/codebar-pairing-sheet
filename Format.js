@@ -165,18 +165,17 @@ class Format {
     const data = sheet.getDataRange().getValues();
     const nameColIndex = data[0].indexOf('Name');
 
-    if (nameColIndex !== -1) {
-      sheet.insertColumnBefore(nameColIndex + 1);
-      const newData = sheet.getDataRange().getValues();
+    if (nameColIndex === -1) return;
 
-      // Set header
-      sheet.getRange(1, nameColIndex + 1).setValue('??');
-
-      // Insert checkboxes for all data rows
-      for (let i = 2; i <= newData.length; i++) {
-        sheet.getRange(i, nameColIndex + 1).insertCheckboxes();
-        sheet.getRange(i, nameColIndex + NUM_COLS).insertCheckboxes();
-      }
+    // Insert the '??' column before the 'Name' column
+    sheet.insertColumnBefore(nameColIndex + 1);
+    sheet.getRange(1, nameColIndex + 1).setValue('??');
+  
+    // Insert checkboxes for all data rows in batch operations
+    const numRows = data.length - 1; // Exclude header row
+    if (numRows > 0) {
+      sheet.getRange(2, nameColIndex + 1, numRows, 1).insertCheckboxes();
+      sheet.getRange(2, nameColIndex + NUM_COLS, numRows, 1).insertCheckboxes();
     }
   }
 

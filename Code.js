@@ -90,7 +90,7 @@ function formatCsvData() {
 
     Utils.showInfo('Formatting completed successfully!');
   } catch (e) {
-    Utils.showError(e.message);
+    Utils.showError(e);
   }
 }
 
