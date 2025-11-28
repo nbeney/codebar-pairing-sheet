@@ -62,36 +62,33 @@ function reset() {
 }
 
 function format() {
-  const sheet = SpreadsheetApp.getActiveSheet();
-  if (sheet.getRange(1, 1).getValue() === HEADER_REGISTERED) {
-    Utils.showInfo('The sheet appears to be already formatted.');
-    return;
-  }
-
   try {
-    Format.splitCSVIntoColumns(); // structure
-    Format.fillEmptyCells(); // content
-    Format.flagNewcomersAndDeleteNewAttendeesColumn(); // content
-    Format.flagCoachesAndStudents(); // content
-    Format.mergeSkillsAndTutorialColumns(); // content
-    Format.normalizeTechnologies('Skills/Tutorial', SKILLS_MAP); // content
-    Format.normalizePronouns(); // content
-    Format.insertRegisteredColumn(); // structure
+    const sheet = SpreadsheetApp.getActiveSheet();
+    if (sheet.getRange(1, 1).getValue() !== HEADER_REGISTERED) {
+      Format.splitCSVIntoColumns(); // structure
+      Format.fillEmptyCells(); // content
+      Format.flagNewcomersAndDeleteNewAttendeesColumn(); // content
+      Format.flagCoachesAndStudents(); // content
+      Format.mergeSkillsAndTutorialColumns(); // content
+      Format.normalizeTechnologies('Skills/Tutorial', SKILLS_MAP); // content
+      Format.normalizePronouns(); // content
+      Format.insertRegisteredColumn(); // structure
 
-    Format.insertGroupColumn(); // structure
-    Format.setGroupForCoachesAndStudents(); // content
-    Format.renameColumnHeaders(); // content
+      Format.insertGroupColumn(); // structure
+      Format.setGroupForCoachesAndStudents(); // content
+      Format.renameColumnHeaders(); // content
 
-    Format.freezeTopRow(); // appearance
-    Format.formatHeaderRow(); // appearance
-    Format.duplicateHeaders(); // appearance
-    Format.resizeColumnsToFit(); // appearance
-    Format.clipColumns(); // appearance
-    Format.addFilter();
+      Format.freezeTopRow(); // appearance
+      Format.formatHeaderRow(); // appearance
+      Format.duplicateHeaders(); // appearance
+      Format.resizeColumnsToFit(); // appearance
+      Format.clipColumns(); // appearance
+      Format.addFilter();
+    }
 
     sortByCurrentCriteria(); // appearance
 
-    Utils.showInfo('Formatting completed successfully!');
+    // Utils.showInfo('Formatting completed successfully!');
   } catch (e) {
     Utils.showError(e);
   }

@@ -175,7 +175,7 @@ class Format {
     const numRows = data.length - 1; // Exclude header row
     if (numRows > 0) {
       sheet.getRange(2, nameColIndex + 1, numRows, 1).insertCheckboxes();
-      sheet.getRange(2, nameColIndex + NUM_COLS, numRows, 1).insertCheckboxes();
+      // sheet.getRange(2, nameColIndex + NUM_COLS, numRows, 1).insertCheckboxes();
     }
   }
 
@@ -200,6 +200,7 @@ class Format {
       .requireValueInList(groups, true)
       .build();
     sheet.getRange(2, groupColIndex + 1, sheet.getLastRow() - 1).setDataValidation(val);
+    sheet.getRange(2, groupColIndex + 1 + NUM_COLS, sheet.getLastRow() - 1).setDataValidation(val);
 
     // Add the conditional formatting
 
@@ -278,8 +279,8 @@ class Format {
 
   static duplicateHeaders() {
     const sheet = SpreadsheetApp.getActiveSheet();
-    const source = sheet.getRange('A1').offset(0, 0, 1, NUM_COLS);
-    const target = sheet.getRange('G1');
+    const source = sheet.getRange(1, 1, 1, NUM_COLS);
+    const target = sheet.getRange(1, 1 + NUM_COLS);
     source.copyTo(target, SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
   }
 
