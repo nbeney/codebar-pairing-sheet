@@ -149,7 +149,7 @@ class Tutorial {
 
     static step1ResetSheet() {
         Tutorial.showStep(
-            'Step 1: Reset sheet',
+            'Step 1: Reset',
             [
                 'This will clear the entire sheet and prepare it for new data.',
                 'It is unnecessary if you start with a blank sheet.',
@@ -182,14 +182,14 @@ class Tutorial {
 
     static step3FormatCsv() {
         Tutorial.showStep(
-            'Step 3: Format CSV data',
+            'Step 3: Format',
             [
                 'This will format the raw CSV data to make it easier to work with later',
                 '',
                 'Proceed with formatting?'
             ],
             () => {
-                formatCsvData();
+                format();
                 Tutorial.step4RegisterParticipants();
             }
         );

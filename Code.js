@@ -2,7 +2,7 @@ function onOpen() {
   const ui = SpreadsheetApp.getUi();
   ui.createMenu('Codebar 🏳️‍🌈')
     .addItem('Reset 🗑', 'reset')
-    .addItem('Format 🖌️', 'formatCsvData')
+    .addItem('Format 🖌️', 'format')
     // .addSeparator()
     // .addItem('Select coach ➖', 'selectCoach')
     // .addItem('Assign coach to student ➕', 'assignSelectedCoachToStudent')
@@ -19,9 +19,9 @@ function onOpen() {
     .addSeparator()
     .addSubMenu(
       ui.createMenu(`Tutorial ${ICONS.tutorial}`)
-        .addItem('1 - Reset sheet', 'Tutorial.step1ResetSheet')
-        .addItem('2 - Paste CSV data', 'Tutorial.step2PastePairingCsvData')
-        .addItem('3 - Format CSV data', 'Tutorial.step3FormatCsv')
+        .addItem('1 - Reset', 'Tutorial.step1ResetSheet')
+        .addItem('2 - Paste CSV', 'Tutorial.step2PastePairingCsvData')
+        .addItem('3 - Format', 'Tutorial.step3FormatCsv')
         .addItem('4 - Register participants', 'Tutorial.step4RegisterParticipants')
         .addItem('5 - Sort participants', 'Tutorial.step5SortParticipants')
         .addItem('6 - Assign coaches to groups', 'Tutorial.step6AssignCoachesToGroups')
@@ -61,7 +61,7 @@ function reset() {
   sheet.getRange("A1").activate();
 }
 
-function formatCsvData() {
+function format() {
   const sheet = SpreadsheetApp.getActiveSheet();
   if (sheet.getRange(1, 1).getValue() === HEADER_REGISTERED) {
     Utils.showInfo('The sheet appears to be already formatted.');
