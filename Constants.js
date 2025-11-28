@@ -17,11 +17,19 @@ const COL_NOTE_2 = COL_NOTE_1 + NUM_COLS;
 
 const ICONS = {
   newcomer: '🐥',
+  host: '🏠',
   coach: '😇',
   student: '🎓',
   pair: '😇🎓',
   tutorial: '👣',
 };
+
+const HEADER_REGISTERED = '??';
+const HEADER_NAME = 'Name';
+const HEADER_ROLE = 'Role';
+const HEADER_GROUP = 'Group';
+const HEADER_SKILLS_TUTORIAL = 'Skills/Tutorial';
+const HEADER_NOTE = 'Note';
 
 const COLOR_HEADER = '#999999';
 

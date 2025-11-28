@@ -10,18 +10,35 @@ class Format {
     const numRows = data.length;
     const numColumns = data[0].length;
 
-    // Iterate through all cells in the data
     for (let i = 0; i < numRows; i++) {
       for (let j = 0; j < numColumns; j++) {
-        // Check if the cell is empty (null, undefined, or empty string)
         if (data[i][j] === null || data[i][j] === undefined || data[i][j] === '') {
-          data[i][j] = '-'; // Replace with empty marker string for consistency
+          data[i][j] = '-';
         }
       }
     }
 
-    // Write the modified data back to the sheet
     sheet.getRange(1, 1, numRows, numColumns).setValues(data);
+  }
+
+  static flagNewcomersAndDeleteNewAttendeesColumn() {
+    const sheet = SpreadsheetApp.getActiveSheet();
+    const data = sheet.getDataRange().getValues();
+    const newAttendeeColIndex = data[0].indexOf('New attendee');
+    const nameColIndex = data[0].indexOf('Name');
+
+    if (newAttendeeColIndex === -1 || nameColIndex === -1) return;
+
+    // Flag newcomers by appending an icon to their names
+    for (let i = 1; i < data.length; i++) {
+      if (data[i][newAttendeeColIndex].toString().toLowerCase() === 'true') {
+        data[i][nameColIndex] = data[i][nameColIndex] + ' ' + ICONS.newcomer;
+      }
+    }
+    sheet.getDataRange().setValues(data);
+
+    // Delete the 'New attendee' column
+    sheet.deleteColumn(newAttendeeColIndex + 1);    
   }
 
   static compactPronouns() {
@@ -80,23 +97,6 @@ class Format {
     sheet.getDataRange().setValues(data);
   }
 
-  static flagNewcomers() {
-    const sheet = SpreadsheetApp.getActiveSheet();
-    const data = sheet.getDataRange().getValues();
-    const newAttendeeColIndex = data[0].indexOf('New attendee');
-    const nameColIndex = data[0].indexOf('Name');
-
-    if (newAttendeeColIndex === -1 || nameColIndex === -1) return;
-
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][newAttendeeColIndex].toString().toLowerCase() === 'true') {
-        data[i][nameColIndex] = data[i][nameColIndex] + ' ' + ICONS.newcomer;
-      }
-    }
-
-    sheet.getDataRange().setValues(data);
-  }
-
   static flagCoachesAndStudents() {
     const sheet = SpreadsheetApp.getActiveSheet();
     const data = sheet.getDataRange().getValues();
@@ -113,16 +113,6 @@ class Format {
     }
 
     sheet.getDataRange().setValues(data);
-  }
-
-  static deleteNewAttendeesColumn() {
-    const sheet = SpreadsheetApp.getActiveSheet();
-    const data = sheet.getDataRange().getValues();
-    const newAttendeeColIndex = data[0].indexOf('New attendee');
-
-    if (newAttendeeColIndex !== -1) {
-      sheet.deleteColumn(newAttendeeColIndex + 1);
-    }
   }
 
   static normalizeTechnologies(columnName, skillsMap) {

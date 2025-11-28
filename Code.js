@@ -50,11 +50,11 @@ function reset() {
 
   const bold = SpreadsheetApp.newTextStyle().setBold(true).build();
   const message = SpreadsheetApp.newRichTextValue()
-    .setText('Paste the output of Pairing CSV here then run the Format CSV 🖌️ macro')
+    .setText('Paste the output of Pairing CSV here then run the Format 🖌️ macro')
     //        0         1         2         3         4         5         6         7         8
     //        012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
     .setTextStyle(20, 31, bold)
-    .setTextStyle(50, 60, bold)
+    .setTextStyle(50, 55, bold)
     .build();
   sheet.getRange("A1").setRichTextValue(message);
   sheet.getRange("A1").setFontStyle('italic');
@@ -62,26 +62,32 @@ function reset() {
 }
 
 function formatCsvData() {
+  const sheet = SpreadsheetApp.getActiveSheet();
+  if (sheet.getRange(1, 1).getValue() === HEADER_REGISTERED) {
+    Utils.showInfo('The sheet appears to be already formatted.');
+    return;
+  }
+
   try {
-    Format.splitCSVIntoColumns();
-    Format.fillEmptyCells();
-    Format.compactPronouns();
-    Format.flagNewcomers();
-    Format.flagCoachesAndStudents();
-    Format.deleteNewAttendeesColumn();
-    Format.normalizeTechnologies('Skills', SKILLS_MAP);
-    Format.normalizeTechnologies('Note', SKILLS_MAP);
-    Format.copySkillsForCoaches();
-    Format.deleteSkillsAndRenameTutorialColumn();
-    Format.insertRegisteredColumn();
-    Format.insertGroupColumn();
-    Format.setGroupForCoachesAndStudents();
-    Format.sortAttendees();
-    Format.freezeTopRow();
-    Format.formatHeaderRow();
-    Format.duplicateHeaders();
-    Format.resizeColumnsToFit();
-    Format.clipColumns();
+    Format.splitCSVIntoColumns(); // structure
+    Format.fillEmptyCells(); // content
+    Format.flagNewcomersAndDeleteNewAttendeesColumn(); // content
+    Format.compactPronouns(); // content
+    Format.flagCoachesAndStudents(); // content
+    Format.normalizeTechnologies('Skills', SKILLS_MAP); // content
+    Format.normalizeTechnologies('Note', SKILLS_MAP); // content
+    Format.copySkillsForCoaches(); // structure & content
+    Format.deleteSkillsAndRenameTutorialColumn(); 
+    Format.insertRegisteredColumn(); // structure
+    Format.insertGroupColumn(); // structure
+    Format.setGroupForCoachesAndStudents(); // content
+
+    Format.sortAttendees(); // appearance
+    Format.freezeTopRow(); // appearance
+    Format.formatHeaderRow(); // appearance
+    Format.duplicateHeaders(); // appearance
+    Format.resizeColumnsToFit(); // appearance
+    Format.clipColumns(); // appearance
     Format.addFilter();
 
     Utils.showInfo('Formatting completed successfully!');
