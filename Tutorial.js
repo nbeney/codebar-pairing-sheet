@@ -165,7 +165,7 @@ class Tutorial {
 
     static step2PastePairingCsvData() {
         Tutorial.showStep(
-            'Step 2: Paste CSV data',
+            'Step 2: Paste CSV',
             [
                 'You will manually paste into A1 the participants list that you have exported from the workshop web page using the "Pairing CSV" function.',
                 '',

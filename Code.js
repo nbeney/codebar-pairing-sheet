@@ -89,7 +89,7 @@ function format() {
     Format.clipColumns(); // appearance
     Format.addFilter();
 
-    Format.sortAttendees(); // appearance
+    sortByCurrentCriteria(); // appearance
 
     Utils.showInfo('Formatting completed successfully!');
   } catch (e) {

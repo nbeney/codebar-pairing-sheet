@@ -319,17 +319,4 @@ class Format {
     const sheet = SpreadsheetApp.getActiveSheet();
     sheet.getDataRange().createFilter();
   }
-
-  static sortAttendees() {
-    const sheet = SpreadsheetApp.getActiveSheet();
-    const data = sheet.getDataRange().getValues();
-    const nameColIndex = data[0].indexOf(HEADER_NAME);
-
-    if (nameColIndex === -1) return;
-
-    const range = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn());
-    range.sort([
-      { column: nameColIndex + 1, ascending: true }
-    ]);
-  }
 }
