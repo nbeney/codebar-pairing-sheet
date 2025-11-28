@@ -85,6 +85,9 @@ const GROUPS = [
   new Group("Beginner", "#ffd6e8", [
     "I don't know, I'm a complete beginner.",
   ]),
+  new Group("Git", "#d4f1f4", [
+    'Introduction to version control',
+  ]),
   new Group("HTML/CSS", "#c7e9ff", [
     'HTML 1: Introducing HTML',
     'HTML/CSS 2: Introducing CSS',
@@ -112,7 +115,7 @@ const GROUPS = [
   new Group("Python", "#c8f0d4", [
     'Python',
   ]),
-  new Group("React", "#b2e8f0", [
+  new Group("React", "#ffddc1", [
     'React Project',
   ]),
   GROUP_TBD,
