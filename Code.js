@@ -197,10 +197,10 @@ function sortByCurrentCriteria() {
 function sortByName() {
   const sheet = SpreadsheetApp.getActiveSheet();
   const data = sheet.getDataRange().getValues();
-  const nameColIndex = data[0].indexOf(HEADER_NAME);
+  const nameColIndex = data[1].indexOf(HEADER_NAME);
 
   if (nameColIndex !== -1) {
-    const range = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn());
+    const range = sheet.getRange(3, 1, sheet.getLastRow() - 1, sheet.getLastColumn());
     range.sort({ column: nameColIndex + 1, ascending: true });
   }
 
@@ -211,11 +211,11 @@ function sortByName() {
 function sortByRoleName() {
   const sheet = SpreadsheetApp.getActiveSheet();
   const data = sheet.getDataRange().getValues();
-  const roleColIndex = data[0].indexOf(HEADER_ROLE);
-  const nameColIndex = data[0].indexOf(HEADER_NAME);
+  const roleColIndex = data[1].indexOf(HEADER_ROLE);
+  const nameColIndex = data[1].indexOf(HEADER_NAME);
 
   if (roleColIndex !== -1 && nameColIndex !== -1) {
-    const range = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn());
+    const range = sheet.getRange(3, 1, sheet.getLastRow() - 1, sheet.getLastColumn());
     range.sort([
       { column: roleColIndex + 1, ascending: true },
       { column: nameColIndex + 1, ascending: true }
@@ -229,12 +229,12 @@ function sortByRoleName() {
 function sortByGroupRoleName() {
   const sheet = SpreadsheetApp.getActiveSheet();
   const data = sheet.getDataRange().getValues();
-  const groupColIndex = data[0].indexOf(HEADER_GROUP);
-  const roleColIndex = data[0].indexOf(HEADER_ROLE);
-  const nameColIndex = data[0].indexOf(HEADER_NAME);
+  const groupColIndex = data[1].indexOf(HEADER_GROUP);
+  const roleColIndex = data[1].indexOf(HEADER_ROLE);
+  const nameColIndex = data[1].indexOf(HEADER_NAME);
 
   if (groupColIndex !== -1 && roleColIndex !== -1 && nameColIndex !== -1) {
-    const range = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn());
+    const range = sheet.getRange(3, 1, sheet.getLastRow() - 2, sheet.getLastColumn());
     range.sort([
       { column: groupColIndex + 1, ascending: true },
       { column: roleColIndex + 1, ascending: true },
@@ -249,12 +249,12 @@ function sortByGroupRoleName() {
 function sortByRoleGroupName() {
   const sheet = SpreadsheetApp.getActiveSheet();
   const data = sheet.getDataRange().getValues();
-  const roleColIndex = data[0].indexOf(HEADER_ROLE);
-  const groupColIndex = data[0].indexOf(HEADER_GROUP);
-  const nameColIndex = data[0].indexOf(HEADER_NAME);
-
+  const roleColIndex = data[1].indexOf(HEADER_ROLE);
+  const groupColIndex = data[1].indexOf(HEADER_GROUP);
+  const nameColIndex = data[1].indexOf(HEADER_NAME);
+  
   if (roleColIndex !== -1 && groupColIndex !== -1 && nameColIndex !== -1) {
-    const range = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn());
+    const range = sheet.getRange(3, 1, sheet.getLastRow() - 2, sheet.getLastColumn());
     range.sort([
       { column: roleColIndex + 1, ascending: true },
       { column: groupColIndex + 1, ascending: true },
