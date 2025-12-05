@@ -326,4 +326,42 @@ class Format {
     const sheet = SpreadsheetApp.getActiveSheet();
     sheet.getDataRange().createFilter();
   }
+
+  static addSummaryRow() {
+    const sheet = SpreadsheetApp.getActiveSheet();
+    const lastRow = sheet.getLastRow();
+
+    sheet.insertRowBefore(1);
+    sheet.getRange(1, 1, 1, sheet.getLastColumn()).clearFormat();
+    sheet.getRange(1, 1, 1, sheet.getLastColumn()).setFontWeight('bold');
+
+    const createAllCountFormula = () => {
+      const parts = [
+        '"ALL: "',
+        `COUNTIF(A3:A${lastRow + 1},"TRUE")`, // Fixed range
+        '" / "',
+        `COUNTA(A3:A${lastRow + 1})`, // Fixed range
+        `IF(COUNTA(A3:A${lastRow + 1})-COUNTIF(A3:A${lastRow + 1},"TRUE")>0," (-"&COUNTA(A3:A${lastRow + 1})-COUNTIF(A3:A${lastRow + 1},"TRUE")&")","")` // Fixed range
+      ];
+      return parts.join(' & ');
+    };
+
+    const createRoleCountFormula = (label, role) => {
+      const parts = [
+        `"${label}: "`,
+        `COUNTIFS(A3:A${lastRow + 1},"TRUE",C3:C${lastRow + 1},"${role}")`, // Fixed ranges
+        '" / "',
+        `COUNTIF(C3:C${lastRow + 1},"${role}")`, // Fixed range
+        `IF(COUNTIF(C3:C${lastRow + 1},"${role}")-COUNTIFS(A3:A${lastRow + 1},"TRUE",C3:C${lastRow + 1},"${role}")>0," (-"&COUNTIF(C3:C${lastRow + 1},"${role}")-COUNTIFS(A3:A${lastRow + 1},"TRUE",C3:C${lastRow + 1},"${role}")&")","")` // Fixed ranges
+      ];
+      return parts.join(' & ');
+    };
+
+    const all = createAllCountFormula();
+    const coaches = createRoleCountFormula("COACHES", ROLE_COACH);
+    const students = createRoleCountFormula("STUDENTS", ROLE_STUDENT);
+    const formula = `=${all} & "  |  " & ${coaches} & "  |  " & ${students}`;
+
+    sheet.getRange(1, 1).setFormula(formula);
+  }
 }

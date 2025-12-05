@@ -84,6 +84,7 @@ function format() {
       Format.resizeColumnsToFit(); // appearance
       Format.clipColumns(); // appearance
       Format.addFilter();
+      Format.addSummaryRow();
     }
 
     sortByCurrentCriteria(); // appearance
