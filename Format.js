@@ -364,4 +364,87 @@ class Format {
 
     sheet.getRange(1, 1).setFormula(formula);
   }
+
+  static renameSheetToList() {
+    const sheet = SpreadsheetApp.getActiveSheet();
+    sheet.setName('List');
+  }
+
+  // Create new Pairs sheet with:
+  // A1 = List!A1
+  // A2:L2 = List!A2:F2 (twice)
+  // B3:Bn = copy values of List!B3:Fn for students only
+  // H3:Nn = copy values of List!B3:Fn for coaches only
+  // A3:Ln = xlookup formulas to link back to List sheet
+  static createPairsSheet() {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const listSheet = ss.getSheetByName('List');
+    if (!listSheet) return;
+
+    let pairsSheet = ss.getSheetByName('Pairs');
+    if (pairsSheet) {
+      ss.deleteSheet(pairsSheet);
+    }
+    pairsSheet = ss.insertSheet('Pairs');
+
+    const listData = listSheet.getDataRange().getValues();
+    const numRows = listData.length;
+
+    // Link to summary cell
+    pairsSheet.getRange(1, 1).setFormula('=List!A1');
+    pairsSheet.getRange(1, 1).setFontWeight('bold');
+
+    // Set header row
+    const headerRange = listSheet.getRange(2, 1, 1, NUM_COLS);
+    headerRange.copyTo(pairsSheet.getRange(2, 1), SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
+    headerRange.copyTo(pairsSheet.getRange(2, NUM_COLS + 1), 
+    SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
+
+    // Copy names from List to Pairs, start at row 3, students to to column B, coaches to column H
+    for (let i = 2; i < numRows; i++) {
+      const role = listData[i][COL_ROLE_1 - 1];
+      if (role === ROLE_STUDENT) {
+        const sourceRange = listSheet.getRange(i + 1, COL_NAME_1);
+        sourceRange.copyTo(pairsSheet.getRange(i + 1, COL_NAME_1), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+      } else if (role === ROLE_COACH) {
+        const sourceRange = listSheet.getRange(i + 1, COL_NAME_1);
+        sourceRange.copyTo(pairsSheet.getRange(i + 1, COL_NAME_2), SpreadsheetApp.CopyPasteType.PASTE_VALUES, false);
+      }
+    }
+
+    // Link columns A and C-F to List sheet using XLOOKUP
+    const formula = '=XLOOKUP($B3,List!$B:$B,List!A:A,"")';
+    pairsSheet.getRange(3, 1, numRows - 2, 1).setFormula(formula);
+    const sourceRange = pairsSheet.getRange(3, 1, numRows - 2, 1);
+    const targetRange = pairsSheet.getRange(3, 3, numRows - 2, NUM_COLS - 1);
+    sourceRange.copyTo(targetRange, SpreadsheetApp.CopyPasteType.PASTE_FORMULA, false);
+
+    // Link columns G and I-L to List sheet using XLOOKUP
+    const formula2 = '=XLOOKUP($H3,List!$B:$B,List!A:A,"")';
+    pairsSheet.getRange(3, 7, numRows - 2, 1).setFormula(formula2);
+    const sourceRange2 = pairsSheet.getRange(3, 7, numRows - 2, 1);
+    const targetRange2 = pairsSheet.getRange(3, 9, numRows - 2, NUM_COLS - 1);
+    sourceRange2.copyTo(targetRange2, SpreadsheetApp.CopyPasteType.PASTE_FORMULA, false);
+
+    // Insert tickboxes in A3:An and G3:Gn if there is a value
+    for (let i = 2; i < numRows; i++) {
+      if (pairsSheet.getRange(i + 1, 1).getValue() !== '') {
+        pairsSheet.getRange(i + 1, 1).insertCheckboxes();
+      }
+      if (pairsSheet.getRange(i + 1, 7).getValue() !== '') {
+        pairsSheet.getRange(i + 1, 7).insertCheckboxes();
+      }
+    }
+
+    // Make each column in Pairs the same width as in List
+    // Except E-F and K-L which are made narrower (100)
+    for (let col = 1; col <= NUM_COLS; col++) {
+      // const width = listSheet.getColumnWidth(col);
+      const width = (col === 5 || col === 6 || col === 11 || col === 12) 
+        ? 100 
+        : listSheet.getColumnWidth(col);
+      pairsSheet.setColumnWidth(col, width);
+      pairsSheet.setColumnWidth(col + NUM_COLS, width);
+    }
+  }
 }

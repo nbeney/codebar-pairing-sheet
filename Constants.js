@@ -1,3 +1,6 @@
+const SHEET_LIST = 'List';
+const SHEET_PAIRS = 'Pairs';
+
 // Number of columns after the CSV data has been formatted
 const NUM_COLS = 6;
 

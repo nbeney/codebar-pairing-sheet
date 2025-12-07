@@ -85,11 +85,12 @@ function format() {
       Format.clipColumns(); // appearance
       Format.addFilter();
       Format.addSummaryRow();
+      Format.renameSheetToList(); // content
+      Format.createPairsSheet(); // structure
     }
 
-    sortByCurrentCriteria(); // appearance
-
-    // Utils.showInfo('Formatting completed successfully!');
+    SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_LIST).activate();
+    sortByName(); // appearance
   } catch (e) {
     Utils.showError(e);
   }
@@ -252,7 +253,7 @@ function sortByRoleGroupName() {
   const roleColIndex = data[1].indexOf(HEADER_ROLE);
   const groupColIndex = data[1].indexOf(HEADER_GROUP);
   const nameColIndex = data[1].indexOf(HEADER_NAME);
-  
+
   if (roleColIndex !== -1 && groupColIndex !== -1 && nameColIndex !== -1) {
     const range = sheet.getRange(3, 1, sheet.getLastRow() - 2, sheet.getLastColumn());
     range.sort([
