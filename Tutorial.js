@@ -221,7 +221,7 @@ class Tutorial {
                 'Proceed with sorting?'
             ],
             () => {
-                sortByGroupRoleName();
+                sortListByGroupRoleName();
                 Tutorial.step6AssignCoachesToGroups();
             }
         );
@@ -253,7 +253,7 @@ class Tutorial {
                 'Proceed with sorting?'
             ],
             () => {
-                sortByGroupRoleName();
+                sortListByGroupRoleName();
                 Tutorial.step8AssignCoachesToStudents();
             }
         );

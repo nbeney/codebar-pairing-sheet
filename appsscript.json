@@ -6,8 +6,8 @@
   "runtimeVersion": "V8",
   "sheets": {
     "macros": [{
-      "menuName": "sortByCurrentCriteria",
-      "functionName": "sortByCurrentCriteria",
+      "menuName": "sortListByCurrentCriteria",
+      "functionName": "sortListByCurrentCriteria",
       "defaultShortcut": "Ctrl+Alt+Shift+1"
     }, {
       "menuName": "showPairings",

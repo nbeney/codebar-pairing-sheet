@@ -40,8 +40,6 @@ const ROLE_COACH = 'Coach ' + ICONS.coach;
 const ROLE_STUDENT = 'Student ' + ICONS.student;
 
 const PROP_SORT_CRITERIA = 'SORT_CRITERIA';
-const PROP_COACH_ROW_INDEX = 'COACH_ROW_INDEX';
-const PROP_COACH_COL_INDEX = 'COACH_COL_INDEX';
 
 const SKILLS_MAP = {
   'android': 'Android',

@@ -181,7 +181,7 @@ class Format {
 
   static applyConditionalFormatting(l) {
     const sheet = SpreadsheetApp.getActiveSheet();
-    const data = sheet.getDataRange().getValues();
+    const data = sheet.getRange(2, 1, sheet.getLastRow(), sheet.getLastColumn()).getValues();
     const groupColIndex = data[0].indexOf(HEADER_GROUP);
     const rules = sheet.getConditionalFormatRules();
 
@@ -190,13 +190,13 @@ class Format {
     for (const group of GROUPS) {
       // Create rules for both column ranges
       const columnRanges = [
-        { range: sheet.getRange(2, 1, sheet.getLastRow() - 1, NUM_COLS), groupColIndex: groupColIndex },
-        { range: sheet.getRange(2, NUM_COLS + 1, sheet.getLastRow() - 1, NUM_COLS), groupColIndex: groupColIndex + NUM_COLS }
+        { range: sheet.getRange(3, 1, sheet.getLastRow() - 2, NUM_COLS), groupColIndex: groupColIndex },
+        { range: sheet.getRange(3, NUM_COLS + 1, sheet.getLastRow() - 2, NUM_COLS), groupColIndex: groupColIndex + NUM_COLS }
       ];
   
       for (const { range, groupColIndex: colIndex } of columnRanges) {
         const cond = group.name === GROUP_TBD.name ? '<>""' : `="${group.name}"`;
-        const formula = `=$${String.fromCharCode(65 + colIndex)}2${cond}`;
+        const formula = `=$${String.fromCharCode(65 + colIndex)}3${cond}`;
         const rule = SpreadsheetApp.newConditionalFormatRule()
           .whenFormulaSatisfied(formula)
           .setBackground(group.color)
@@ -228,7 +228,6 @@ class Format {
       .requireValueInList(groups, true)
       .build();
     sheet.getRange(2, groupColIndex + 1, sheet.getLastRow() - 1).setDataValidation(val);
-    sheet.getRange(2, groupColIndex + 1 + NUM_COLS, sheet.getLastRow() - 1).setDataValidation(val);
   
     // Add the conditional formatting
     Format.applyConditionalFormatting();
@@ -281,13 +280,6 @@ class Format {
     const headerRange = sheet.getRange(1, 1, 1, sheet.getLastColumn());
     headerRange.setFontWeight('bold');
     headerRange.setBackground(COLOR_HEADER);
-  }
-
-  static duplicateHeaders() {
-    const sheet = SpreadsheetApp.getActiveSheet();
-    const source = sheet.getRange(1, 1, 1, NUM_COLS);
-    const target = sheet.getRange(1, 1 + NUM_COLS);
-    source.copyTo(target, SpreadsheetApp.CopyPasteType.PASTE_NORMAL, false);
   }
 
   static resizeColumnsToFit() {
@@ -446,5 +438,8 @@ class Format {
       pairsSheet.setColumnWidth(col, width);
       pairsSheet.setColumnWidth(col + NUM_COLS, width);
     }
+
+    // Clip text in all A2:Ln
+    pairsSheet.getRange(2, 1, pairsSheet.getLastRow() - 1, pairsSheet.getLastColumn()).setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
   }
 }

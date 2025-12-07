@@ -3,15 +3,16 @@ function onOpen() {
   ui.createMenu('Codebar 🏳️‍🌈')
     .addItem('Reset 🗑', 'reset')
     .addItem('Format 🖌️', 'format')
-    // .addSeparator()
-    // .addItem('Select coach ➖', 'selectCoach')
-    // .addItem('Assign coach to student ➕', 'assignSelectedCoachToStudent')
     .addItem(`Show pairings ${ICONS.pair}`, 'showPairings')
     .addSeparator()
-    .addItem('Sort by name', 'sortByName')
-    .addItem('Sort by role/name', 'sortByRoleName')
-    .addItem('Sort by group/role/name', 'sortByGroupRoleName')
-    .addItem('Sort by role/group/name', 'sortByRoleGroupName')
+    .addSubMenu(
+      ui.createMenu(`Sort list`)
+        .addItem('By name', 'sortListByName')
+        .addItem('By role/name', 'sortListByRoleName')
+        .addItem('By group/role/name', 'sortListByGroupRoleName')
+        .addItem('By role/group/name', 'sortListByRoleGroupName')
+    )
+    .addItem('Sort pairs', 'sortPairs')
     .addSeparator()
     .addItem('Filter all', 'filterAll')
     .addItem('Filter present only 👍', 'filterPresentOnly')
@@ -31,6 +32,9 @@ function onOpen() {
     )
     .addItem('Help 🛟', 'showHelp')
     .addToUi();
+
+  Format.createPairsSheet();
+  sortPairs();
 }
 
 function reset() {
@@ -65,88 +69,35 @@ function format() {
   try {
     const sheet = SpreadsheetApp.getActiveSheet();
     if (sheet.getRange(1, 1).getValue() !== HEADER_REGISTERED) {
-      Format.splitCSVIntoColumns(); // structure
-      Format.fillEmptyCells(); // content
-      Format.flagNewcomersAndDeleteNewAttendeesColumn(); // content
-      Format.flagCoachesAndStudents(); // content
-      Format.mergeSkillsAndTutorialColumns(); // content
-      Format.normalizeTechnologies('Skills/Tutorial', SKILLS_MAP); // content
-      Format.normalizePronouns(); // content
-      Format.insertRegisteredColumn(); // structure
+      Format.splitCSVIntoColumns();
+      Format.fillEmptyCells();
+      Format.flagNewcomersAndDeleteNewAttendeesColumn();
+      Format.flagCoachesAndStudents();
+      Format.mergeSkillsAndTutorialColumns();
+      Format.normalizeTechnologies('Skills/Tutorial', SKILLS_MAP);
+      Format.normalizePronouns();
+      Format.insertRegisteredColumn();
 
-      Format.insertGroupColumn(); // structure
-      Format.setGroupForCoachesAndStudents(); // content
-      Format.renameColumnHeaders(); // content
+      Format.insertGroupColumn();
+      Format.setGroupForCoachesAndStudents();
+      Format.renameColumnHeaders();
 
-      Format.freezeTopRow(); // appearance
-      Format.formatHeaderRow(); // appearance
-      Format.duplicateHeaders(); // appearance
-      Format.resizeColumnsToFit(); // appearance
-      Format.clipColumns(); // appearance
+      Format.freezeTopRow();
+      Format.formatHeaderRow();
+      Format.resizeColumnsToFit();
+      Format.clipColumns();
       Format.addFilter();
       Format.addSummaryRow();
-      Format.renameSheetToList(); // content
-      Format.createPairsSheet(); // structure
+      Format.renameSheetToList();
+      Format.createPairsSheet();
     }
 
     SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_LIST).activate();
-    sortByName(); // appearance
+    sortListByName();
+    sortPairs();
   } catch (e) {
     Utils.showError(e);
   }
-}
-
-// This macro should be imported and assigned to Ctrl-Alt-Shift 1
-function selectCoach() {
-  const sheet = SpreadsheetApp.getActiveSheet();
-  const rowIdx = sheet.getActiveCell().getRow();
-  const leftRole = sheet.getRange(rowIdx, COL_ROLE_1).getValue();
-  const rightRole = sheet.getRange(rowIdx, COL_ROLE_2).getValue();
-
-  if (leftRole !== ROLE_COACH && rightRole !== ROLE_COACH) {
-    Utils.showInfo('Current row does not contain a coach.');
-    return;
-  }
-
-  const colIdx = (leftRole === ROLE_COACH) ? COL_REGISTERED_1 : COL_REGISTERED_2;
-
-  sheet.getRange(rowIdx, colIdx).offset(0, 0, 1, NUM_COLS).activate();
-
-  PropertiesService.getScriptProperties().setProperty(PROP_COACH_ROW_INDEX, rowIdx.toString());
-  PropertiesService.getScriptProperties().setProperty(PROP_COACH_COL_INDEX, colIdx.toString());
-}
-
-// This macro should be imported and assigned to Ctrl-Alt-Shift 2
-function assignSelectedCoachToStudent() {
-  const sheet = SpreadsheetApp.getActiveSheet();
-  const studentRowIdx = sheet.getActiveCell().getRow();
-  const leftRole = sheet.getRange(studentRowIdx, COL_ROLE_1).getValue();
-  const rightRole = sheet.getRange(studentRowIdx, COL_ROLE_2).getValue();
-  const coachRowIdx = PropertiesService.getScriptProperties().getProperty(PROP_COACH_ROW_INDEX);
-  const coachColIdx = PropertiesService.getScriptProperties().getProperty(PROP_COACH_COL_INDEX);
-
-  if (!coachRowIdx || !coachColIdx) {
-    Utils.showInfo('Please select a coach first.');
-    return;
-  } else if (leftRole === ROLE_COACH) {
-    Utils.showInfo('Cannot assign a coach to a coach.');
-    return;
-  } else if (rightRole === ROLE_COACH) {
-    Utils.showInfo('The student is already assigned to a coach.');
-    return;
-  } else if (leftRole !== ROLE_STUDENT) {
-    Utils.showInfo('Current row does not contain a student.');
-    return;
-  }
-
-  const sourceRange = sheet.getRange(coachRowIdx, coachColIdx, 1, NUM_COLS);
-  const targetRange = sheet.getRange(studentRowIdx, COL_REGISTERED_2, 1, NUM_COLS);
-  sourceRange.moveTo(targetRange);
-
-  sortByCurrentCriteria();
-
-  PropertiesService.getScriptProperties().deleteProperty(PROP_COACH_ROW_INDEX);
-  PropertiesService.getScriptProperties().deleteProperty(PROP_COACH_COL_INDEX);
 }
 
 // This macro should be imported and assigned to Ctrl-Alt-Shift 4
@@ -175,28 +126,29 @@ function showPairings() {
 }
 
 // This macro should be imported and assigned to Ctrl-Alt-Shift 3
-function sortByCurrentCriteria() {
+function sortListByCurrentCriteria() {
   const criteria = PropertiesService.getScriptProperties().getProperty(PROP_SORT_CRITERIA);
   switch (criteria) {
     case 'BY_NAME':
-      sortByName();
+      sortListByName();
       break;
     case 'BY_ROLE_NAME':
-      sortByRoleName();
+      sortListByRoleName();
       break;
     case 'BY_GROUP_ROLE_NAME':
-      sortByGroupRoleName();
+      sortListByGroupRoleName();
       break;
     case 'BY_ROLE_GROUP_NAME':
-      sortByRoleGroupName();
+      sortListByRoleGroupName();
       break;
     default:
-      sortByName();
+      sortListByName();
   }
 }
 
-function sortByName() {
-  const sheet = SpreadsheetApp.getActiveSheet();
+function sortListByName() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_LIST);
+  sheet.activate();
   const data = sheet.getDataRange().getValues();
   const nameColIndex = data[1].indexOf(HEADER_NAME);
 
@@ -209,8 +161,9 @@ function sortByName() {
   Format.applyConditionalFormatting();
 }
 
-function sortByRoleName() {
-  const sheet = SpreadsheetApp.getActiveSheet();
+function sortListByRoleName() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_LIST);
+  sheet.activate();
   const data = sheet.getDataRange().getValues();
   const roleColIndex = data[1].indexOf(HEADER_ROLE);
   const nameColIndex = data[1].indexOf(HEADER_NAME);
@@ -227,8 +180,9 @@ function sortByRoleName() {
   Format.applyConditionalFormatting();
 }
 
-function sortByGroupRoleName() {
-  const sheet = SpreadsheetApp.getActiveSheet();
+function sortListByGroupRoleName() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_LIST);
+  sheet.activate();
   const data = sheet.getDataRange().getValues();
   const groupColIndex = data[1].indexOf(HEADER_GROUP);
   const roleColIndex = data[1].indexOf(HEADER_ROLE);
@@ -247,8 +201,9 @@ function sortByGroupRoleName() {
   Format.applyConditionalFormatting();
 }
 
-function sortByRoleGroupName() {
-  const sheet = SpreadsheetApp.getActiveSheet();
+function sortListByRoleGroupName() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_LIST);
+  sheet.activate();
   const data = sheet.getDataRange().getValues();
   const roleColIndex = data[1].indexOf(HEADER_ROLE);
   const groupColIndex = data[1].indexOf(HEADER_GROUP);
@@ -264,6 +219,43 @@ function sortByRoleGroupName() {
   }
 
   PropertiesService.getScriptProperties().setProperty(PROP_SORT_CRITERIA, 'BY_ROLE_GROUP_NAME');
+  Format.applyConditionalFormatting();
+}
+
+function sortPairs() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_PAIRS);
+  sheet.activate();
+
+  // Add Key header in M2
+  sheet.getRange(2, 13).setValue('Key').setFontWeight('bold');
+
+  // Populate Key column with group (D & J) + role (C & I) + name (B & H)
+  // Use getValues to read all data at once for performance
+  // Use setValues to write all data at once for performance
+  const data = sheet.getDataRange().getValues();
+  const numRows = data.length;
+  const keyValues = [];
+
+  for (let i = 2; i < numRows; i++) {
+    const leftGroup = data[i][COL_GROUP_1 - 1];
+    const leftRole = data[i][COL_ROLE_1 - 1];
+    const leftName = data[i][COL_NAME_1 - 1];
+    const rightGroup = data[i][COL_GROUP_2 - 1];
+    const rightRole = data[i][COL_ROLE_2 - 1];
+    const rightName = data[i][COL_NAME_2 - 1];
+    const key = `${leftGroup}${rightGroup}${leftRole}${rightRole}${leftName}${rightName}`;
+    keyValues.push([key]);
+  }
+
+  sheet.getRange(3, 13, keyValues.length, 1).setValues(keyValues);
+
+  // Sort by Key column (M)
+  const range = sheet.getRange(3, 1, sheet.getLastRow() - 2, sheet.getLastColumn());
+  range.sort({ column: 13, ascending: true });
+
+  // Remove Key column
+  sheet.deleteColumn(13);
+
   Format.applyConditionalFormatting();
 }
 
@@ -298,8 +290,16 @@ function showHelp() {
 }
 
 function collectPairings() {
-  const isCoach = (reg, name, role) => { return reg && role === ROLE_COACH && name !== ''; }
-  const isStudent = (reg, name, role) => { return reg && role === ROLE_STUDENT && name !== ''; }
+  const EMPTY = 1;
+  const ABSENT = 2;
+  const PRESENT = 3;
+
+  const status = (reg, name, role, targetRole) => {
+    if (name === '') return EMPTY;
+    if (!reg && role === targetRole) return ABSENT;
+    if (reg && role === targetRole) return PRESENT;
+    return EMPTY;
+  };
 
   const sheet = SpreadsheetApp.getActiveSheet();
   const data = sheet.getDataRange().getValues();
@@ -310,35 +310,57 @@ function collectPairings() {
   let unregisteredCoaches = [];
   let unregisteredStudents = [];
 
-  for (let i = 1; i < data.length; i++) {
+  for (let i = 2; i < data.length; i++) {
     const group = data[i][COL_GROUP_1 - 1];
     const reg1 = data[i][COL_REGISTERED_1 - 1];
     const name1 = data[i][COL_NAME_1 - 1];
     const role1 = data[i][COL_ROLE_1 - 1];
+    const studentStatus = status(reg1, name1, role1, ROLE_STUDENT);
     const reg2 = data[i][COL_REGISTERED_2 - 1];
     const name2 = data[i][COL_NAME_2 - 1];
     const role2 = data[i][COL_ROLE_2 - 1];
+    const coachStatus = status(reg2, name2, role2, ROLE_COACH);
 
-    if (isStudent(reg1, name1, role1) && isCoach(reg2, name2, role2)) {
-      // Paired student and coach
-      if (!pairings[group]) {
-        pairings[group] = [];
-      }
-      // Find if the coach already exists in the group
-      let coachEntry = pairings[group].find(entry => entry.coach === name2);
-      if (!coachEntry) {
-        coachEntry = { coach: name2, students: [] };
-        pairings[group] = [...pairings[group], coachEntry];
-      }
-      coachEntry.students = [...coachEntry.students, name1];
-    } else if (isStudent(reg1, name1, role1)) {
-      unpairedStudents = [...unpairedStudents, name1];
-    } else if (isCoach(reg1, name1, role1)) {
-      unpairedCoaches = [...unpairedCoaches, name1];
-    } else if (!reg1 && role1 === ROLE_STUDENT && name1 !== '') {
-      unregisteredStudents = [...unregisteredStudents, name1];
-    } else if (!reg1 && role1 === ROLE_COACH && name1 !== '') {
-      unregisteredCoaches = [...unregisteredCoaches, name1];
+    // Fixed switch statement syntax - use string concatenation or if-else
+    const combinedStatus = `${studentStatus}-${coachStatus}`;
+    
+    switch (combinedStatus) {
+      case `${EMPTY}-${ABSENT}`:
+        unregisteredCoaches.push(name2);
+        break;
+      case `${EMPTY}-${PRESENT}`:
+        unpairedCoaches.push(name2);
+        break;
+      case `${ABSENT}-${EMPTY}`:
+        unregisteredStudents.push(name1);
+        break;
+      case `${ABSENT}-${ABSENT}`:
+        unregisteredStudents.push(name1);
+        unregisteredCoaches.push(name2);
+        break;
+      case `${ABSENT}-${PRESENT}`:
+        unregisteredStudents.push(name1);
+        unpairedCoaches.push(name2);
+        break;
+      case `${PRESENT}-${EMPTY}`:
+        unpairedStudents.push(name1);
+        break;
+      case `${PRESENT}-${ABSENT}`:
+        unpairedStudents.push(name1);
+        unregisteredCoaches.push(name2);
+        break;
+      case `${PRESENT}-${PRESENT}`:
+        // Paired student and coach
+        if (!pairings[group]) {
+          pairings[group] = [];
+        }
+        let coachEntry = pairings[group].find(entry => entry.coach === name2);
+        if (!coachEntry) {
+          coachEntry = { coach: name2, students: [] };
+          pairings[group].push(coachEntry);
+        }
+        coachEntry.students.push(name1);
+        break;
     }
   }
 
