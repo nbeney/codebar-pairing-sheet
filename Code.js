@@ -305,10 +305,10 @@ function collectPairings() {
   const data = sheet.getDataRange().getValues();
 
   const pairings = {};
-  let unpairedCoaches = [];
-  let unpairedStudents = [];
-  let unregisteredCoaches = [];
-  let unregisteredStudents = [];
+  const unpairedCoaches = new Set();
+  const unpairedStudents = new Set();
+  const unregisteredCoaches = new Set();
+  const unregisteredStudents = new Set();
 
   for (let i = 2; i < data.length; i++) {
     const group = data[i][COL_GROUP_1 - 1];
@@ -326,28 +326,28 @@ function collectPairings() {
     
     switch (combinedStatus) {
       case `${EMPTY}-${ABSENT}`:
-        unregisteredCoaches.push(name2);
+        unregisteredCoaches.add(name2);
         break;
       case `${EMPTY}-${PRESENT}`:
-        unpairedCoaches.push(name2);
+        unpairedCoaches.add(name2);
         break;
       case `${ABSENT}-${EMPTY}`:
-        unregisteredStudents.push(name1);
+        unregisteredStudents.add(name1);
         break;
       case `${ABSENT}-${ABSENT}`:
-        unregisteredStudents.push(name1);
-        unregisteredCoaches.push(name2);
+        unregisteredStudents.add(name1);
+        unregisteredCoaches.add(name2);
         break;
       case `${ABSENT}-${PRESENT}`:
-        unregisteredStudents.push(name1);
-        unpairedCoaches.push(name2);
+        unregisteredStudents.add(name1);
+        unpairedCoaches.add(name2);
         break;
       case `${PRESENT}-${EMPTY}`:
-        unpairedStudents.push(name1);
+        unpairedStudents.add(name1);
         break;
       case `${PRESENT}-${ABSENT}`:
-        unpairedStudents.push(name1);
-        unregisteredCoaches.push(name2);
+        unpairedStudents.add(name1);
+        unregisteredCoaches.add(name2);
         break;
       case `${PRESENT}-${PRESENT}`:
         // Paired student and coach
@@ -364,10 +364,11 @@ function collectPairings() {
     }
   }
 
-  unpairedCoaches.sort();
-  unpairedStudents.sort();
-  unregisteredCoaches.sort();
-  unregisteredStudents.sort();
-
-  return { pairings, unpairedCoaches, unpairedStudents, unregisteredCoaches, unregisteredStudents };
+  return { 
+    pairings, 
+    unpairedCoaches: [...unpairedCoaches].sort(), 
+    unpairedStudents: [...unpairedStudents].sort(), 
+    unregisteredCoaches: [...unregisteredCoaches].sort(), 
+    unregisteredStudents: [...unregisteredStudents].sort() 
+  };
 }
