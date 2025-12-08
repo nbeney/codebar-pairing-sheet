@@ -33,8 +33,8 @@ function onOpen() {
     .addItem('Help 🛟', 'showHelp')
     .addToUi();
 
-  Format.createPairsSheet();
-  sortPairs();
+  // Format.createPairsSheet();
+  // sortPairs();
 }
 
 function reset() {
