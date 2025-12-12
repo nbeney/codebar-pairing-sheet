@@ -102,6 +102,10 @@ function format() {
 
 // This macro should be imported and assigned to Ctrl-Alt-Shift 4
 function showPairings() {
+  // Activate Pairs sheet
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_PAIRS);
+  sheet.activate();
+  
   const { pairings, unpairedCoaches, unpairedStudents, unregisteredCoaches, unregisteredStudents } = collectPairings();
 
   // Create HTML template from the pairings.html file
@@ -125,24 +129,34 @@ function showPairings() {
   ui.showModalDialog(htmlOutput, 'Pairings');
 }
 
-// This macro should be imported and assigned to Ctrl-Alt-Shift 3
+// This macro should be imported and assigned to Ctrl-Alt-Shift 1
 function sortListByCurrentCriteria() {
-  const criteria = PropertiesService.getScriptProperties().getProperty(PROP_SORT_CRITERIA);
-  switch (criteria) {
-    case 'BY_NAME':
-      sortListByName();
+  const sheet = SpreadsheetApp.getActiveSheet();
+  switch (sheet.getName()) {
+    case SHEET_LIST:
+      const criteria = PropertiesService.getScriptProperties().getProperty(PROP_SORT_CRITERIA);
+      switch (criteria) {
+        case 'BY_NAME':
+          sortListByName();
+          break;
+        case 'BY_ROLE_NAME':
+          sortListByRoleName();
+          break;
+        case 'BY_GROUP_ROLE_NAME':
+          sortListByGroupRoleName();
+          break;
+        case 'BY_ROLE_GROUP_NAME':
+          sortListByRoleGroupName();
+          break;
+        default:
+          sortListByName();
+      }
       break;
-    case 'BY_ROLE_NAME':
-      sortListByRoleName();
-      break;
-    case 'BY_GROUP_ROLE_NAME':
-      sortListByGroupRoleName();
-      break;
-    case 'BY_ROLE_GROUP_NAME':
-      sortListByRoleGroupName();
+    case SHEET_PAIRS:
+      sortPairs();
       break;
     default:
-      sortListByName();
+      Utils.showError(`Sorting is only available on the "${SHEET_LIST}" or "${SHEET_PAIRS}" sheets.`);
   }
 }
 
